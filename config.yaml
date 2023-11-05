@@ -1,0 +1,19 @@
+autofat:
+  network:
+    rpi:
+      ip: 10.0.1.99
+      credientials:
+        user: ubuntu
+        pwd: .env.rpi_pwd
+    xavier:
+      ip: 10.0.1.100
+      credientials:
+        user: ubuntu
+        pwd: .env.xavier_pwd
+  
+  fat:
+    - name: devops
+      file: devops.yaml
+      order: 1
+      steps: 0
+      
