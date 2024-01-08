@@ -40,11 +40,10 @@ def read_yaml(file_path: str) -> dict | list:
     return replace_env_vars(yaml_data)
 
 # Return a list of files with a given ending
-def filetypeindir(dir: str, tag: str) -> list:
+def filetypeindir(dir_path: str, suffix: str) -> list:
     files = []
-    
-    for file in dir:
-        if file.endswith(tag):
+    for file in os.listdir(dir_path):
+        if file.endswith(suffix):
             files.append(file)
 
     return files
