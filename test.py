@@ -1,5 +1,6 @@
 import fire
 import time
+import os
 
 from rich.layout import Layout
 from rich.table import Table
@@ -46,6 +47,14 @@ def main():
         live.console.print("What is your name?")
         name = live.console.input()
         live.console.log(name)
+
+    path = "/FATs"
+    dir_list = os.listdir(path) 
+  
+    print("Files and directories in '", path, "' :")  
+  
+    # print the list 
+    print(dir_list) 
 
 
 if __name__ == "__main__":
