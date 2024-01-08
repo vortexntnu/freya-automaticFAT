@@ -1,6 +1,7 @@
 import os
 import fire
 import yaml
+import subprocess
 
 def main():
     fats = []

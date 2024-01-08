@@ -43,7 +43,7 @@ def read_yaml(file_path: str) -> dict | list:
 def filetypeindir(dir: str, tag: str) -> list:
     files = []
     
-    for file in dir:
+    for file in os.listdir(dir):
         if file.endswith(tag):
             files.append(file)
 

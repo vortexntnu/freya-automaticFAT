@@ -1,2 +1,5 @@
 fat:
-  name: 
+  name: DevOps
+
+run:
+  command: echo test
