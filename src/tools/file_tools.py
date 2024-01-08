@@ -38,3 +38,13 @@ def read_yaml(file_path: str) -> dict | list:
         yaml_data = yaml.load(file, Loader=yaml.FullLoader)
     
     return replace_env_vars(yaml_data)
+
+# Return a list of files with a given ending
+def filetypeindir(dir: str, tag: str) -> list:
+    files = []
+    
+    for file in dir:
+        if file.endswith(tag):
+            files.append(file)
+
+    return files
