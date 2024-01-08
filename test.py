@@ -4,18 +4,31 @@ import time
 from rich.layout import Layout
 from rich.table import Table
 from rich.live import Live
+from rich.console import Console
+from rich import box
+
+from rich.logging import RichHandler
+
+import logging
 
 
-def update_status(status: dict | list) -> Table:
-    table = Table()
+def generate_status_table(status: dict | list) -> Table:
+    table = Table(box=box.MINIMAL)
 
-    table.add_column("FAT", justify="left")
+    table.add_column("FAT", justify="left", min_width=20)
     table.add_column("Status", justify="right")
 
-    for row in status:
+    for row in status:  
         table.add_row(row["fat"], row["status"])
     
     return table
+
+
+log_level = {
+    "info": "[blue]info[/blue]\t",
+    "warning": "[yellow]warning[/yellow]\t",
+    "error": "[red]error[/red]\t" ,
+}
 
 
 def main():
@@ -25,27 +38,23 @@ def main():
         {"fat": "SITAW", "status": "[yellow]Waiting"}
     ]
 
-    with Live(update_status(status), refresh_per_second=4) as live:
-        live.console.log("start")
-        
-        time.sleep(1)
-        status[0]["status"] = "[green]OK"
-        status[1]["status"] = "[yellow]Running"
-        live.update(update_status(status))
+    # layout = Layout().split_row(
+    #     Layout(name="statues"),
+    #     Layout(name="log")
+    # )
 
-        live.console.log("run X")
-        live.console.log("run Y")
-        live.console.log("run Z")
 
-        time.sleep(1)
-        status[1]["status"] = "[red]Error"
-        live.update(update_status(status))   
+    console = Console()
 
-        live.console.log("[red]Error: noe gikk feil.")
+    console.print("Automatic FAT, Freya\n")
 
-        live.console.print("What is your name?")
-        name = live.console.input()
-        live.console.log(name)
+    a = console.input("start? (Y/n): ")
+    console.log(f"{log_level['info']} {a}")
+    console.log(f"{log_level['warning']} Hei")
+
+    console.print("\nSummary")
+
+    console.print(generate_status_table(status))
 
 
 if __name__ == "__main__":
