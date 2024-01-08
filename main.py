@@ -39,7 +39,6 @@ def main() -> None:
     
 
     # TODO: update with config
-<<<<<<< HEAD
     status = []
 
     projectDir = get_project_path()
@@ -47,20 +46,12 @@ def main() -> None:
     totalDir = projectDir + fatDir
     files = filetypeindir(totalDir, ".yaml")
     for file in files:
-        status.append({"name": "Pending", 
+        status.append({"name": "Name pending", 
                        "status": "Pending", 
                        "file": file, 
                        "fat": read_yaml(totalDir + "/" + file)})
 
     print(status)
-=======
-    status = [
-        {"name": "DevOps", "status": "Unknow", "file": "Unknow", "fat": object},
-        {"name": "SITWAS", "status": "Unknow"},
-        {"name": "Autonomus", "status": "Unknow"},
-        {"name": "Embedded", "status": "Unknow"}
-    ]
->>>>>>> 94bb6709a456a8d4a3d592b0142e630c82289adb
 
     # ------------------------------------------------------
     # begining
