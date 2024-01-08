@@ -41,6 +41,7 @@ def main() -> None:
     # TODO: update with config
     status = []
 
+    # access FAT dir, add all yaml-files and insert into status
     projectDir = get_project_path()
     fatDir = get_abs_path("/FATs")
     totalDir = projectDir + fatDir
