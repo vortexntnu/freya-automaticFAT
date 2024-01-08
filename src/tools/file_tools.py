@@ -42,7 +42,7 @@ def read_yaml(file_path: str) -> dict | list:
 # Return a list of files with a given ending
 def filetypeindir(dir_path: str, suffix: str) -> list:
     files = []
-    for file in os.listdir(dir_path):
+    for file in os.listdir(get_abs_path(dir_path)):
         if file.endswith(suffix):
             files.append(file)
 
