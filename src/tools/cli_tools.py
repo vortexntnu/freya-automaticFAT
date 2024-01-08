@@ -2,72 +2,34 @@
 
 import subprocess
 
-# run command
-def run_tf(command: str, device: dict = None) -> bool:
+# run command, output true/false => command success or not
+def run_tf(command: str, device: object = None) -> bool:
     if device:
         command = ssh_wrap(command, device)
 
-    # runs command
     result = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
     # Check the command's return code (0 means success)
-    if result.returncode == 0:
-        # environment has pkg
-        return True
-    else:
-        # environment dont have pkg
-        return False
+    return result.returncode == 0
+
+# run command, output text
+def run_str(command: str, device: object = None) -> dict | list:
+    if device:
+        command = ssh_wrap(command, device)
+
+    result = subprocess.run(command, shell=True, stderr=subprocess.STDOUT) # stdout=subprocess.DEVNULL
+
+    # Check the command's return code (0 means success)
+    return result
+
 
 # add ssh wraping to command
 def ssh_wrap(command: str, device: dict) -> str:
-    # sshpass applies the password to an ssh command
-    # ssh connect you to another device
-    # you can "pipe" a command using ssh to execute the command on another device
-
     ip = device["ip"]
     user = device["user"]
     pwd = device["pwd"]
 
-    return 'sshpass -p "{}" ssh {}@{} "{}"'.format(pwd, user, ip, command)
+    new_command = 'sshpass -p "{}" ssh {}@{} "{}"'.format(pwd, user, ip, command)
 
+    return new_command
 
-# # check if apt package exist on craptop
-# def hasDPKG(pkg: str) -> bool:
-#     # bash command to run ("> /dev/null 2>&1" removes output)
-#     command = 'dpkg -s ' + pkg + ' > /dev/null 2>&1'
-
-#     if run(command):
-#         return True
-#     else:
-#         print("\033[0;31m", "Error: ", "\033[0m", "Missing package: ", pkg, ", try: apt-get install ", pkg, sep="")
-#         return False
-
-# # ping device
-# def ping(ip: str) -> bool:
-#     command = 'ping -c 4 ' + ip + ' | grep "4 received" > /dev/null 2>&1'
-
-#     if run(command):
-#         return True
-#     else:
-#         print("\033[0;31m", "Error: ", "\033[0m", "Unable to ping/reach ", ip, sep="")
-#         return False
-
-# # test ssh by try to run ls though ssh
-# def ssh_ls(device: object) -> bool:
-#     command = 'ls > /dev/null 2>&1'
-    
-#     if ssh_run(device["ip_address"], device["user"], device["password"], command):
-#         return True
-#     else:
-#         print("\033[0;31m", "Error: ", "\033[0m", "Unable to ssh into: ", device["name"], sep="")
-#         return False
-
-# # validate env var on devices though ssh
-# def valEnv(device: object, variable: str, value: str) -> bool:
-#     command = "cat ~/.bashrc | grep 'export {}' | grep '{}' > /dev/null 2>&1".format(variable, value)
-
-#     if ssh_run(device["ip_address"], device["user"], device["password"], command):
-#         return True
-#     else:
-#         print("\033[0;31m", "Error: ", "\033[0m", "Unable to find env variable ", variable, " with value ", value, " on ", device["name"],  sep="")
-#         return False
