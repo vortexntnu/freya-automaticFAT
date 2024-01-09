@@ -66,7 +66,7 @@ def main() -> None:
     if config_yamVal(config, log):
         console.log(f"{log_level['info']} Finished validating config file")
     else:
-        console.log(f"{log_level['error']} Could not validate config file")
+        console.log(f"{log_level['warning']} Could not validate config file")
 
 
     # ------------------------------------------------------
