@@ -13,14 +13,13 @@ def run_bool(command: str, device: object = None) -> bool:
     return result.returncode == 0
 
 # run command, output text
-def run_str(command: str, device: object = None) -> dict | list:
+def run_str(command: str, device: object = None) -> str:
     if device:
         command = ssh_wrap(command, device)
 
-    result = subprocess.run(command, shell=True, stderr=subprocess.STDOUT) # stdout=subprocess.DEVNULL
+    result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
 
-    # Check the command's return code (0 means success)
-    return result
+    return result.decode("utf-8")
 
 
 # add ssh wrapping to command
