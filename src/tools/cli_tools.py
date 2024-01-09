@@ -3,7 +3,7 @@
 import subprocess
 
 # run command, output true/false => command success or not
-def run_tf(command: str, device: object = None) -> bool:
+def run_bool(command: str, device: object = None) -> bool:
     if device:
         command = ssh_wrap(command, device)
 

@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 name: Devops
-# priority: 1
-=======
-name: DevOps
->>>>>>> 104d7d49a9e70b0a5d9a7810cd2ad15a9588d707
+priority: 1
 tasks:
   - name: Test RPI connection
     command: ping -c 4 10.0.1.99 | grep "4 received"
@@ -15,17 +11,23 @@ tasks:
   - name: Test Xavier connection
     command: ping -c 4 10.0.1.100 | grep "4 received"
     device: laptop
-    expect: True
+    expect: 
+      type: boolean
+      value: True
 
   - name: Validate RPI bachrc
     command: cat ~/.bashrc | grep 'export ' | grep ''
     device: rpi
-    expect: True
+    expect: 
+      type: boolean
+      value: True
   
   - name: Validate Xavier bachrc
     command: cat ~/.bashrc | grep 'export ' | grep ''
     device: xavier
-    expect: True
+    expect: 
+      type: boolean
+      value: True
 
   - name: power check
     command: ""
