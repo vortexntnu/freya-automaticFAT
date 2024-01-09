@@ -105,9 +105,9 @@ def main() -> None:
             console.log(f"{log_level['info']} Doing task: {task['name']}")
 
             if task["expect"]["type"] == "boolean":
-
-            else if task["expect"]["type"] == "manual":
-
+                pass
+            elif task["expect"]["type"] == "manual":
+                pass
 
 
     # ------------------------------------------------------

@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 name: Devops
 # priority: 1
+=======
+name: DevOps
+>>>>>>> 104d7d49a9e70b0a5d9a7810cd2ad15a9588d707
 tasks:
   - name: Test RPI connection
     command: ping -c 4 10.0.1.99 | grep "4 received"
