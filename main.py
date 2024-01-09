@@ -1,6 +1,7 @@
 from src.tools.file_tools import read_yaml, filetypeindir, get_abs_path, get_project_path
 from src.tools.rich_print import generate_print
 from src.validations.yaml_validations import config_yamVal
+from src.tools.cli_tools import run_bool
 
 import fire
 import os
@@ -104,9 +105,19 @@ def main() -> None:
         for task in fat["content"]["tasks"]:
             console.log(f"{log_level['info']} Doing task: {task['name']}")
 
+            # if task expect is of type boolean
             if task["expect"]["type"] == "boolean":
-                pass
-
+                if task["device"] == "laptop":
+                    result = run_bool(task["command"])
+                else:
+                    result = run_bool(task["command"], devices[task["device"]])
+                
+                if not result == task["expect"]["value"]:
+                    fat["status"] = fat_status["failed"]
+                    console.log(f"{log_level['error']} Failed task")
+                    break
+            
+            # if task expect is of type manual
             elif task["expect"]["type"] == "manual":
                 userInput = input(task["expect"]["prompt"] + " (y/N)").upper()
                 if userInput == "Y" or userInput == "YES":
@@ -119,8 +130,12 @@ def main() -> None:
                     console.log(f"{log_level['warning']} Task: {task['name']} was not completed")
                     fat["status"] = fat_status["failed"]
                     break
-
-
+                
+        # check fat status 
+        if fat["status"] == fat_status["running"]:
+            fat["status"] = fat_status["success"]    
+        elif fat["status"] == fat_status["failed"] and "priority" in fat["content"]:
+            break
 
 
     # ------------------------------------------------------

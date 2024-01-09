@@ -2,7 +2,7 @@ name: Autonomous
 priority: 99
 tasks:
   - name: Files on computer
-    command: ls
+    command: ping localhost
     device: laptop
     expect:
       type: boolean
