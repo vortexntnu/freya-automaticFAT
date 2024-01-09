@@ -1,1 +1,17 @@
 name: Autonomous
+priority: 99
+tasks:
+  - name: Files on computer
+    command: ls
+    device: laptop
+    expect:
+      type: boolean
+      value: True
+  
+  - name: Connected to power
+    command: ""
+    device: laptop
+    expect:
+      type: manual
+      prompt: Is the computer connected to a power source?
+      value: True

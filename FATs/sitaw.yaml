@@ -1,2 +1,8 @@
-fat:
-  name: SITAW
+name: SITAW
+tasks:
+  - name: Nothing tasks
+    command: ls
+    device: laptop
+    expect:
+      type: boolean
+      value: False
