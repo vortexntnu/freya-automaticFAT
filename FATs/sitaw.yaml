@@ -20,8 +20,8 @@ tasks:
       minvalue: 0
       maxvalue: 42
   - name: Array tasks
-    command: echo 
+    command: echo "[0, 2, 1]"
     device: laptop
     expect:
       type: array
-      value: [0, 2]
+      value: [0, 2, 1]

@@ -156,6 +156,22 @@ def main() -> None:
                         console.log(f"{log_level['error']} Task failed")
                         break
 
+
+            # if task expect is of type array
+            if task["expect"]["type"] == "array":
+                if "device" not in task or task["device"] == "laptop":
+                    result = run_str(task["command"])
+                else:
+                    result = run_str(task["command"], devices[task["device"]])
+                
+                console.log(result)
+                if str(task["expect"]["value"]) in result:
+                    console.log(f"{log_level['info']} Task successfully completed")
+                else:
+                    fat["status"] = fat_status["failed"]
+                    console.log(f"{log_level['error']} Task failed")
+                    break
+
             # if task expect is of type manual
             elif task["expect"]["type"] == "manual":
                 userInput = "R"
