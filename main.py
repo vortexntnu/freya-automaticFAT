@@ -4,6 +4,7 @@ from src.validations.yaml_validations import config_yamVal
 
 import fire
 import time
+import logging as log
 
 from rich import print, box
 from rich.console import Console
@@ -24,7 +25,7 @@ def main() -> None:
 
     console = Console()
 
-    console.rule("Autonomus FAT, Freya")
+    console.rule("Autonomous FAT, Freya")
     
     console.log(f"{log_level['info']} Reading config file")
     config = read_yaml("config.yaml")
@@ -33,7 +34,7 @@ def main() -> None:
     
     devices = {}
     for device in config["autofat"]["network"]:
-        devices[device["name"]] = {"ip": device["ip"], "user": device["credientials"]["user"], "pwd": device["credientials"]["pwd"]}
+        devices[device["name"]] = {"ip": device["ip"], "user": device["credentials"]["user"], "pwd": device["credentials"]["pwd"]}
 
     console.log(devices)
     
@@ -51,6 +52,8 @@ def main() -> None:
                        "status": "Pending", 
                        "file": file, 
                        "fat": read_yaml(totalDir + "/" + file)})
+
+    
 
     print(status)
 
@@ -72,10 +75,11 @@ def main() -> None:
     table = Table(box=box.MINIMAL)
 
     table.add_column("FAT", justify="left", min_width=20)
-    table.add_column("Status", justify="right")
+    table.add_column("Status", justify="center")
+    table.add_column("File", justify="right")
 
     for row in status:  
-        table.add_row(row["name"], row["status"])
+        table.add_row(row["name"], row["status"], row["file"])
 
     console.print(table)
 
