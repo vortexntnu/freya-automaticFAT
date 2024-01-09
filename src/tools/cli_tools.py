@@ -23,7 +23,7 @@ def run_str(command: str, device: object = None) -> dict | list:
     return result
 
 
-# add ssh wraping to command
+# add ssh wrapping to command
 def ssh_wrap(command: str, device: dict) -> str:
     ip = device["ip"]
     user = device["user"]
