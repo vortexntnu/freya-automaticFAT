@@ -2,12 +2,12 @@ autofat:
   network:
     - name: rpi
       ip: 10.0.1.99
-      credientials:
+      credentials:
         user: ubuntu
         pwd: ${RPI_PWD}
     - name: xavier
       ip: 10.0.1.100
-      credientials:
+      credentials:
         user: ubuntu
         pwd: ${XAVIER_PWD}
         

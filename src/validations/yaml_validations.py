@@ -2,40 +2,65 @@ import logging
 
 
 # the validator of yamles
-def config_yamVal(data: dict | list, log: logging.Logger) -> bool:
+def config_yamVal(data: dict, log: logging.Logger) -> bool:
     # Validate root attributes
-    if not any(key == "autofat" for key, _ in data.items()):
-        log.error = "Config lacks root: autofat."
+    if "autofat" not in data:
+        log.error("Config lacks root: 'autofat'.")
         return False
     else:
-        if not any(key == "network" for key, _ in data["autofat"].items()):
-            log.error = "Config lacks network property under root autofat."
-            return False
-        if not any(key == "fat" for key, _ in data["autofat"].items()):
-            log.error = "Config lacks fat property under root autofat."
+        autofat_data = data["autofat"]
+
+        if "network" not in autofat_data:
+            log.error("Config lacks 'network' property under root 'autofat'.")
             return False
 
-    # network validation
-    for node in data["autofat"]["network"]:
-        if not any(key == "name" for key, _ in node.items()):
-            log.error = "Network segment lacks name."
+        if "fat" not in autofat_data:
+            log.error("Config lacks 'fat' property under root 'autofat'.")
             return False
-        else:
-            name = node["name"]
 
-        if not any(key == "ip" for key, _ in node.items()):
-            log.error = "Network segment " + name + " lacks ip config."
+    # Network validation
+    for node in autofat_data.get("network", []):
+        name = node.get("name")
+
+        if "name" not in node:
+            log.error("Network segment lacks 'name'.")
             return False
-        
-        if not any(key == "credientials" for key, _ in node.items()):
-            log.error = "Network segment " + name + " lacks credientials config."
+
+        if "ip" not in node:
+            log.error(f"Network segment '{name}' lacks 'ip' configuration.")
+            return False
+
+        credentials = node.get("credentials")
+
+        if not credentials:
+            log.error(f"Network segment '{name}' lacks 'credentials' configuration.")
             return False
         else:
-            if not any(key == "user" for key, _ in node["credientials"].items()):
-                log.error = "Credientials segment for " + name + " lacks user."
+            if "user" not in credentials:
+                log.error(f"Credentials segment for '{name}' lacks 'user'.")
                 return False
-            if not any(key == "pwd" for key, _ in node["credientials"].items()):
-                log.error = "Credientials segment for " + name + " lacks password."
+            if "pwd" not in credentials:
+                log.error(f"Credentials segment for '{name}' lacks 'password'.")
                 return False
+
+    # FAT validation
+    for fat in autofat_data.get("fat", []):
+        fat_name = fat.get("name")
+
+        if "name" not in fat:
+            log.error("FAT segment lacks 'name'.")
+            return False
+
+        if "file" not in fat:
+            log.error(f"FAT segment '{fat_name}' lacks 'file' configuration.")
+            return False
+
+        if "order" not in fat:
+            log.error(f"FAT segment '{fat_name}' lacks 'order' configuration.")
+            return False
+
+        if "steps" not in fat:
+            log.error(f"FAT segment '{fat_name}' lacks 'steps' configuration.")
+            return False
 
     return True
