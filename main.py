@@ -1,29 +1,18 @@
-from src.tools.file_tools import read_yaml, filetypeindir, get_abs_path, get_project_path
-from src.tools.rich_print import generate_print
-from src.validations.yaml_validations import config_yamVal
+from src.tools.file_tools import read_yaml, filetypeindir, get_abs_path
 from src.tools.cli_tools import run_bool
+from src.tools.rich_print import log_level, fat_status
+from src.validations.yaml_validations import config_yamVal, fat_yamVal
 
 import fire
 import time
-import os
+from datetime import datetime
 
 from rich import print, box
 from rich.console import Console
 from rich.table import Table
 
 
-log_level = {
-    "info": "[blue]info[/blue]\t",
-    "warning": "[bright_yellow]warning[/bright_yellow]\t",
-    "error": "[red]error[/red]\t" ,
-}
-
-fat_status = {
-    "pending": "[yellow]pending[/yellow]",
-    "running": "[bright_yellow]running[/bright_yellow]",
-    "success": "[green]success[/green]",
-    "failed": "[red]failed[/red]"
-}
+status = []
 
 def main() -> None:
 
@@ -33,17 +22,18 @@ def main() -> None:
 
     console = Console()
 
-    console.rule("Autonomous FAT, Freya")
+    console.rule(f"Automatic FAT, Freya, {datetime.now()}")
     
     console.log(f"{log_level['info']} Reading config file")
     config = read_yaml("config.yaml")
 
     console.log(f"{log_level['info']} Validate config file")
-    config_val = True # config_yamVal(config, console) TODO: revisit config validation
+    config_val = config_yamVal(config, console) # TODO: revisit config validation
     if config_val:
         console.log(f"{log_level['info']} Finish validating config")
     else:
         console.log(f"{log_level['error']} Config did not pass validation")
+        return
     
 
     console.log(f"{log_level['info']} Applying config file")
@@ -56,7 +46,6 @@ def main() -> None:
     console.log(f"{log_level['info']} Searching for FATs")
 
     # access FAT dir, add all yaml-files and insert into status
-    status = []
     fatDir = get_abs_path("FATs")
     files = filetypeindir(fatDir, ".yaml")
     for file in files:
@@ -65,10 +54,12 @@ def main() -> None:
 
         fat = read_yaml(file)
         
-        # fat is empty or TODO: dont pass validation
-        if not fat:
+        # fat validation
+        console.log(f"{log_level['info']} Validating FAT")
+        if not fat_yamVal(fat, devices, console):
             console.log(f"{log_level['warning']} FAT {file} is invalid")
         else:
+            console.log(f"{log_level['info']} FAT passed validation")
             status.append({"name": fat["name"],
                         "status": fat_status["pending"], 
                         "file": file, 
@@ -108,7 +99,7 @@ def main() -> None:
 
             # if task expect is of type boolean
             if task["expect"]["type"] == "boolean":
-                if task["device"] == "laptop":
+                if "device" not in task or task["device"] == "laptop":
                     result = run_bool(task["command"])
                 else:
                     result = run_bool(task["command"], devices[task["device"]])
@@ -126,10 +117,11 @@ def main() -> None:
                 while userInput == "R" or userInput == "REPEAT":
                     console.print(f"\t\t[bright_yellow]    {task['expect']['prompt']}[/bright_yellow]", end=" ")
 
-                    if task["device"] == "laptop":
-                        _ = run_bool(task["command"])
-                    else:
-                        _ = run_bool(task["command"], devices[task["device"]])
+                    if "command" in task:
+                        if "device" not in task or task["device"] == "laptop":
+                            _ = run_bool(task["command"])
+                        else:
+                            _ = run_bool(task["command"], devices[task["device"]])
 
                     userInput = input("(y/N, r = repeat): ").upper()
                     
@@ -141,9 +133,9 @@ def main() -> None:
                         taskValue = False
 
                     if taskValue == task["expect"]["value"]:
-                        console.log(f"{log_level['info']} Task: {task['name']} was successfully completed")
+                        console.log(f"{log_level['info']} Task successfully completed")
                     else:
-                        console.log(f"{log_level['warning']} Task: {task['name']} was not completed")
+                        console.log(f"{log_level['error']} Task failed")
                         fat["status"] = fat_status["failed"]
                         break
                 if fat["status"] == fat_status["failed"]:
@@ -151,7 +143,8 @@ def main() -> None:
                 
         # check fat status 
         if fat["status"] == fat_status["running"]:
-            fat["status"] = fat_status["success"]    
+            fat["status"] = fat_status["success"]
+            console.log(f"{log_level['info']} FAT: {fat['name']}, successful")  
         elif fat["status"] == fat_status["failed"] and "priority" in fat["content"]:
             break
 

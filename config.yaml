@@ -10,10 +10,3 @@ autofat:
       credentials:
         user: ubuntu
         pwd: ${XAVIER_PWD}
-        
-  fat:
-    - name: devops
-      file: devops.yaml
-      order: 1
-      steps: 0
-

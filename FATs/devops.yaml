@@ -24,11 +24,11 @@ tasks:
   - name: Validate Xavier bachrc
     command: cat ~/.bashrc | grep 'export ' | grep ''
     device: xavier
-    expect: True
+    expect: 
+      type: boolean
+      value: True
 
   - name: power check
-    command: ""
-    device: laptop
     expect:
       type: manual
       prompt: Is laptop connected to power?
