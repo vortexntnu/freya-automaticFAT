@@ -3,8 +3,7 @@ from src.tools.rich_print import generate_print
 from src.validations.yaml_validations import config_yamVal
 
 import fire
-import time
-import logging as log
+import os
 
 from rich import print, box
 from rich.console import Console
@@ -15,6 +14,13 @@ log_level = {
     "info": "[blue]info[/blue]\t",
     "warning": "[yellow]warning[/yellow]\t",
     "error": "[red]error[/red]\t" ,
+}
+
+fat_status = {
+    "pending": "[yellow]pending[/yellow]",
+    "running": "[yellow]running[/yellow]",
+    "success": "[green]success[/green]",
+    "failed": "[red]failed[/red]"
 }
 
 def main() -> None:
@@ -29,41 +35,79 @@ def main() -> None:
     
     console.log(f"{log_level['info']} Reading config file")
     config = read_yaml("config.yaml")
+
+    console.log(f"{log_level['info']} Validate config file")
+    config_val = True # config_yamVal(config, console) TODO: revisit config validation
+    if config_val:
+        console.log(f"{log_level['info']} Finish validating config")
+    else:
+        console.log(f"{log_level['error']} Config did not pass validation")
     
+
     console.log(f"{log_level['info']} Applying config file")
-    
     devices = {}
     for device in config["autofat"]["network"]:
         devices[device["name"]] = {"ip": device["ip"], "user": device["credentials"]["user"], "pwd": device["credentials"]["pwd"]}
 
-    console.log(devices)
+    # console.log(devices)
     
-
-    # TODO: update with config
-    status = []
+    console.log(f"{log_level['info']} Searching for FATs")
 
     # access FAT dir, add all yaml-files and insert into status
-    projectDir = get_project_path()
-    fatDir = get_abs_path("/FATs")
-    totalDir = projectDir + fatDir
-    files = filetypeindir(totalDir, ".yaml")
+    status = []
+    fatDir = get_abs_path("FATs")
+    files = filetypeindir(fatDir, ".yaml")
     for file in files:
-        status.append({"name": "Name pending", 
-                       "status": "Pending", 
-                       "file": file, 
-                       "fat": read_yaml(totalDir + "/" + file)})
+        file = get_abs_path(f"FATs\{file}")
+        console.log(f"{log_level['info']} Found FAT: {file}")
 
+        fat = read_yaml(file)
+        
+        # fat is empty or TODO: dont pass validation
+        if not fat:
+            console.log(f"{log_level['warning']} FAT {file} is invalid")
+        else:
+            status.append({"name": fat["name"],
+                        "status": fat_status["pending"], 
+                        "file": file, 
+                        "content": fat})
     
+    # console.log(status)
 
-    print(status)
+    console.log(f"{log_level['info']} Ordering FATs")
+    
+    x = 0
+    while x < (len(status) - 1):
+        y = len(status) - 1
+
+        while y > x:
+            pri_x = [status[x]["content"]["priority"] if "priority" in status[x]["content"] else 0]
+            pri_y = [status[y]["content"]["priority"] if "priority" in status[y]["content"] else 0]
+
+            if pri_y > pri_x:
+                temp = status[x]
+                status[x] = status[y]
+                status[y] = temp
+            
+            y -= 1
+        x += 1
+        
 
     # ------------------------------------------------------
-    # begining
+    # Loop and do FATs
     # ------------------------------------------------------
         
-    console.log(f"{log_level['info']} Validate config file")
-    # val = config_yamVal(config, console)
-    console.log(f"{log_level['info']} Finish validating config")
+    for fat in status:
+        console.log(f"\n{log_level['info']} Begining FAT: {fat['name']}")
+        fat["status"] = fat_status["running"]
+
+        for task in fat["content"]["tasks"]:
+            console.log(f"{log_level['info']} Doing task: {task['name']}")
+
+            if task["expect"]["type"] == "boolean":
+
+            else if task["expect"]["type"] == "manual":
+
 
 
     # ------------------------------------------------------
@@ -74,12 +118,12 @@ def main() -> None:
 
     table = Table(box=box.MINIMAL)
 
+    table.add_column("File", justify="left")
     table.add_column("FAT", justify="left", min_width=20)
-    table.add_column("Status", justify="center")
-    table.add_column("File", justify="right")
+    table.add_column("Status", justify="right")
 
     for row in status:  
-        table.add_row(row["name"], row["status"], row["file"])
+        table.add_row(row["file"], row["name"], row["status"])
 
     console.print(table)
 
