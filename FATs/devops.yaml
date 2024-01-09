@@ -1,2 +1,21 @@
-fat:
-  name: 
+name: Devops
+taks:
+  - name: Test RPI connection
+    command: ping -c 4 10.0.1.99 | grep "4 received"
+    device: laptop
+    expect: True
+
+  - name: Test Xavier connection
+    command: ping -c 4 10.0.1.100 | grep "4 received"
+    device: laptop
+    expect: True
+
+  - name: Validate RPI bachrc
+    command: cat ~/.bashrc | grep 'export ' | grep ''
+    device: rpi
+    expect: True
+  
+  - name: Validate Xavier bachrc
+    command: cat ~/.bashrc | grep 'export ' | grep ''
+    device: xavier
+    expect: True
