@@ -12,13 +12,13 @@ from rich.table import Table
 
 log_level = {
     "info": "[blue]info[/blue]\t",
-    "warning": "[yellow]warning[/yellow]\t",
+    "warning": "[bright_yellow]warning[/bright_yellow]\t",
     "error": "[red]error[/red]\t" ,
 }
 
 fat_status = {
     "pending": "[yellow]pending[/yellow]",
-    "running": "[yellow]running[/yellow]",
+    "running": "[bright_yellow]running[/bright_yellow]",
     "success": "[green]success[/green]",
     "failed": "[red]failed[/red]"
 }
@@ -58,7 +58,7 @@ def main() -> None:
     fatDir = get_abs_path("FATs")
     files = filetypeindir(fatDir, ".yaml")
     for file in files:
-        file = get_abs_path(f"FATs\{file}")
+        file = get_abs_path(f"FATs/{file}")
         console.log(f"{log_level['info']} Found FAT: {file}")
 
         fat = read_yaml(file)
@@ -98,7 +98,7 @@ def main() -> None:
     # ------------------------------------------------------
         
     for fat in status:
-        console.log(f"\n{log_level['info']} Begining FAT: {fat['name']}")
+        console.log(f"\n{log_level['info']} Beginning FAT: {fat['name']}")
         fat["status"] = fat_status["running"]
 
         for task in fat["content"]["tasks"]:
@@ -106,8 +106,21 @@ def main() -> None:
 
             if task["expect"]["type"] == "boolean":
                 pass
+
             elif task["expect"]["type"] == "manual":
-                pass
+                userInput = input(task["expect"]["prompt"] + " (y/N)").upper()
+                if userInput == "Y" or userInput == "YES":
+                    taskValue = True
+                else:
+                    taskValue = False
+                if taskValue == task["expect"]["value"]:
+                    console.log(f"{log_level['info']} Task: {task['name']} was successfully completed")
+                else:
+                    console.log(f"{log_level['warning']} Task: {task['name']} was not completed")
+                    fat["status"] = fat_status["failed"]
+                    break
+
+
 
 
     # ------------------------------------------------------
