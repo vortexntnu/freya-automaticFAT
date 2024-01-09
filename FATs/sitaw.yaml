@@ -1,28 +1,26 @@
 name: SITAW
 tasks:
   - name: String tasks
-    command: ls
+    command: echo "ASV says hi"
     device: laptop
     expect:
       type: string
-      value: "ASV says hi"
+      value: ASV says hi
   - name: Int tasks
-    command: ls
+    command: echo 5
     device: laptop
     expect:
       type: int
       value: 5
   - name: Range tasks
-    command: ls
+    command: echo 12
     device: laptop
     expect:
       type: int
       minvalue: 0
       maxvalue: 42
   - name: Array tasks
-    command: |
-      echo 1
-      echo 2
+    command: echo 
     device: laptop
     expect:
       type: array

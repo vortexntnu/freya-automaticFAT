@@ -1,5 +1,5 @@
 from src.tools.file_tools import read_yaml, filetypeindir, get_abs_path
-from src.tools.cli_tools import run_bool
+from src.tools.cli_tools import run_bool, run_str
 from src.tools.rich_print import log_level, fat_status
 from src.validations.yaml_validations import config_yamVal, fat_yamVal
 
@@ -110,7 +110,52 @@ def main() -> None:
                     fat["status"] = fat_status["failed"]
                     console.log(f"{log_level['error']} Task failed")
                     break
-            
+
+            # if task expect is of type string
+            if task["expect"]["type"] == "string":
+                if "device" not in task or task["device"] == "laptop":
+                    result = run_str(task["command"])
+                else:
+                    result = run_str(task["command"], devices[task["device"]])
+                
+                console.log(result)
+                console.log(task["expect"]["value"])
+                if task["expect"]["value"] in result:
+                    console.log(f"{log_level['info']} Task successfully completed")
+                else:
+                    fat["status"] = fat_status["failed"]
+                    console.log(f"{log_level['error']} Task failed")
+                    break
+
+            # if task expect is of type int
+            if task["expect"]["type"] == "int":
+                if "value" in task["expect"]:
+                    if "device" not in task or task["device"] == "laptop":
+                        result = int(run_str(task["command"]))
+                    else:
+                        result = int(run_str(task["command"], devices[task["device"]]))
+                    
+                    console.log(result)
+                    if result == task["expect"]["value"]: # WIP
+                        console.log(f"{log_level['info']} Task successfully completed")
+                    else:
+                        fat["status"] = fat_status["failed"]
+                        console.log(f"{log_level['error']} Task failed")
+                        break
+                elif "minvalue" in task["expect"] or "maxvalue" in task["expect"]:
+                    if "device" not in task or task["device"] == "laptop":
+                        result = int(run_str(task["command"]))
+                    else:
+                        result = int(run_str(task["command"], devices[task["device"]]))
+                    
+                    console.log(result)
+                    if result in range(task["expect"]["minvalue"], task["expect"]["maxvalue"]): # WIP
+                        console.log(f"{log_level['info']} Task successfully completed")
+                    else:
+                        fat["status"] = fat_status["failed"]
+                        console.log(f"{log_level['error']} Task failed")
+                        break
+
             # if task expect is of type manual
             elif task["expect"]["type"] == "manual":
                 userInput = "R"

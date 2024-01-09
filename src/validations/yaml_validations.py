@@ -2,6 +2,8 @@ from src.tools.rich_print import log_level
 
 from rich.console import Console
 
+types = ["boolean", "manual", "string", "int", "array"]
+
 # the validator of yamles
 def config_yamVal(data: dict | list, console: Console) -> bool:
     # Validate root attributes
@@ -78,17 +80,27 @@ def fat_yamVal(data: dict | list, devices: dict, console: Console) -> bool:
             console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, in lacks a expect type.")
             return False
         
-        if not task["expect"]["type"] == "manual" and not task["expect"]["type"] == "boolean":
-            console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, expect type is an unsupported type, must be eather manual or boolean.")
+        if not task["expect"]["type"] in types:
+            console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, expect type is an unsupported type, must be either manual, boolean, string, int or array.")
             return False
 
-        if "value" not in task["expect"]:
+        if task["expect"]["type"] == "int":
+            if "minvalue" in task:
+                if "maxvalue" not in task:
+                    console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, in lacks a expect value.")
+                    return False
+            elif "maxvalue" in task:
+                if "maxvalue" not in task:
+                    console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, in lacks a expect value.")
+                    return False
+        elif "value" not in task["expect"]:
             console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, in lacks a expect value.")
             return False
         
-        if not task["expect"]["value"] == True and not task["expect"]["value"] == False:
-            console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, expect value is an unsupported value, must be eather True or False.")
-            return False
+        if task["expect"]["type"] == "boolean":
+            if not task["expect"]["value"] == True and not task["expect"]["value"] == False:
+                console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, expect value is an unsupported value, must be eather True or False.")
+                return False
         
         if task["expect"]["type"] == "manual":
             if "prompt" not in task["expect"]:

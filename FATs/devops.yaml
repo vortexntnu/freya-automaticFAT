@@ -1,5 +1,5 @@
 name: DevOps
-priority: 100
+# priority: 100
 tasks:
   - name: Test RPI connection
     command: ping -c 4 10.0.1.99 | grep "4 received"
