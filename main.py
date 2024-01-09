@@ -111,23 +111,40 @@ def main() -> None:
                 else:
                     result = run_bool(task["command"], devices[task["device"]])
                 
-                if not result == task["expect"]["value"]:
+                if result == task["expect"]["value"]:
+                    console.log(f"{log_level['info']} Task successfully completed")
+                else:
                     fat["status"] = fat_status["failed"]
-                    console.log(f"{log_level['error']} Failed task")
+                    console.log(f"{log_level['error']} Task failed")
                     break
             
             # if task expect is of type manual
             elif task["expect"]["type"] == "manual":
-                userInput = input(task["expect"]["prompt"] + " (y/N)").upper()
-                if userInput == "Y" or userInput == "YES":
-                    taskValue = True
-                else:
-                    taskValue = False
-                if taskValue == task["expect"]["value"]:
-                    console.log(f"{log_level['info']} Task: {task['name']} was successfully completed")
-                else:
-                    console.log(f"{log_level['warning']} Task: {task['name']} was not completed")
-                    fat["status"] = fat_status["failed"]
+                userInput = "R"
+                while userInput == "R" or userInput == "REPEAT":
+                    console.print(f"\t\t[bright_yellow]    {task['expect']['prompt']}[/bright_yellow]", end=" ")
+
+                    if task["device"] == "laptop":
+                        _ = run_bool(task["command"])
+                    else:
+                        _ = run_bool(task["command"], devices[task["device"]])
+
+                    userInput = input("(y/N, r = repeat): ").upper()
+                    
+                    if userInput == "Y" or userInput == "YES":
+                        taskValue = True
+                    elif userInput == "R" or userInput == "REPEAT":
+                        continue
+                    else:
+                        taskValue = False
+
+                    if taskValue == task["expect"]["value"]:
+                        console.log(f"{log_level['info']} Task: {task['name']} was successfully completed")
+                    else:
+                        console.log(f"{log_level['warning']} Task: {task['name']} was not completed")
+                        fat["status"] = fat_status["failed"]
+                        break
+                if fat["status"] == fat_status["failed"]:
                     break
                 
         # check fat status 
