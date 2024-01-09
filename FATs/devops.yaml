@@ -1,4 +1,5 @@
 name: DevOps
+priority: 100
 tasks:
   - name: Test RPI connection
     command: ping -c 4 10.0.1.99 | grep "4 received"
@@ -14,19 +15,19 @@ tasks:
       type: boolean
       value: True
 
-  - name: Validate RPI bachrc
+  - name: Validate RPI bashrc
     command: cat ~/.bashrc | grep 'export ' | grep ''
     device: rpi
     expect: 
       type: boolean
       value: True
   
-  - name: Validate Xavier bachrc
+  - name: Validate Xavier bashrc
     command: cat ~/.bashrc | grep 'export ' | grep ''
     device: xavier
     expect: True
 
-  - name: power check
+  - name: Power check
     command: ""
     device: laptop
     expect:

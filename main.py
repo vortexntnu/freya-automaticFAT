@@ -3,13 +3,11 @@ from src.tools.rich_print import generate_print
 from src.validations.yaml_validations import config_yamVal
 from src.tools.cli_tools import run_bool
 
-import fire
-import os
-
 from rich import print, box
 from rich.console import Console
 from rich.table import Table
 
+import fire
 
 log_level = {
     "info": "[blue]info[/blue]\t",
@@ -21,7 +19,7 @@ fat_status = {
     "pending": "[yellow]pending[/yellow]",
     "running": "[bright_yellow]running[/bright_yellow]",
     "success": "[green]success[/green]",
-    "failed": "[red]failed[/red]"
+    "failed": "[red]>failed[/red]"
 }
 
 def main() -> None:
@@ -32,15 +30,15 @@ def main() -> None:
 
     console = Console()
 
-    console.rule("Autonomous FAT, Freya")
+    console.rule("Automatic FAT, Freya")
     
     console.log(f"{log_level['info']} Reading config file")
     config = read_yaml("config.yaml")
 
-    console.log(f"{log_level['info']} Validate config file")
+    console.log(f"{log_level['info']} Validating config file")
     config_val = True # config_yamVal(config, console) TODO: revisit config validation
     if config_val:
-        console.log(f"{log_level['info']} Finish validating config")
+        console.log(f"{log_level['info']} Finished validating config")
     else:
         console.log(f"{log_level['error']} Config did not pass validation")
     
@@ -77,6 +75,7 @@ def main() -> None:
 
     console.log(f"{log_level['info']} Ordering FATs")
     
+    # sort FATs by priority
     x = 0
     while x < (len(status) - 1):
         y = len(status) - 1
