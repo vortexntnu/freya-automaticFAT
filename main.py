@@ -1,4 +1,4 @@
-from src.tools.file_tools import read_yaml
+from src.tools.file_tools import read_yaml, filetypeindir, get_abs_path, get_project_path
 from src.tools.rich_print import generate_print
 from src.validations.yaml_validations import config_yamVal
 
@@ -39,12 +39,20 @@ def main() -> None:
     
 
     # TODO: update with config
-    status = [
-        {"name": "DevOps", "status": "Unknow", "file": "Unknow", "fat": object},
-        {"name": "SITWAS", "status": "Unknow"},
-        {"name": "Autonomus", "status": "Unknow"},
-        {"name": "Embedded", "status": "Unknow"}
-    ]
+    status = []
+
+    # access FAT dir, add all yaml-files and insert into status
+    projectDir = get_project_path()
+    fatDir = get_abs_path("/FATs")
+    totalDir = projectDir + fatDir
+    files = filetypeindir(totalDir, ".yaml")
+    for file in files:
+        status.append({"name": "Name pending", 
+                       "status": "Pending", 
+                       "file": file, 
+                       "fat": read_yaml(totalDir + "/" + file)})
+
+    print(status)
 
     # ------------------------------------------------------
     # begining
