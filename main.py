@@ -11,6 +11,7 @@ from rich import print, box
 from rich.console import Console
 from rich.table import Table
 
+import fire
 
 status = []
 
@@ -28,9 +29,8 @@ def main() -> None:
     config = read_yaml("config.yaml")
 
     console.log(f"{log_level['info']} Validate config file")
-    config_val = config_yamVal(config, console) # TODO: revisit config validation
-    if config_val:
-        console.log(f"{log_level['info']} Finish validating config")
+    if config_yamVal(config, console):
+        console.log(f"{log_level['info']} Finished validating config")
     else:
         console.log(f"{log_level['error']} Config did not pass validation")
         return
@@ -40,8 +40,6 @@ def main() -> None:
     devices = {}
     for device in config["autofat"]["network"]:
         devices[device["name"]] = {"ip": device["ip"], "user": device["credentials"]["user"], "pwd": device["credentials"]["pwd"]}
-
-    # console.log(devices)
     
     console.log(f"{log_level['info']} Searching for FATs")
 
@@ -69,6 +67,7 @@ def main() -> None:
 
     console.log(f"{log_level['info']} Ordering FATs")
     
+    # sort FATs by priority
     x = 0
     while x < (len(status) - 1):
         y = len(status) - 1
@@ -84,7 +83,8 @@ def main() -> None:
             
             y -= 1
         x += 1
-        
+    
+    console.log(f"{log_level['info']} Initial setup finished")
 
     # ------------------------------------------------------
     # Loop and do FATs

@@ -1,8 +1,7 @@
 name: Autonomous
-priority: 99
 tasks:
   - name: Files on computer
-    command: ping localhost
+    command: ls | grep *
     device: laptop
     expect:
       type: boolean
