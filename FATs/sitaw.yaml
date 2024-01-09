@@ -1,8 +1,29 @@
 name: SITAW
 tasks:
-  - name: Nothing tasks
+  - name: String tasks
     command: ls
     device: laptop
     expect:
-      type: boolean
-      value: False
+      type: string
+      value: "ASV says hi"
+  - name: Int tasks
+    command: ls
+    device: laptop
+    expect:
+      type: int
+      value: 5
+  - name: Range tasks
+    command: ls
+    device: laptop
+    expect:
+      type: int
+      minvalue: 0
+      maxvalue: 42
+  - name: Array tasks
+    command: |
+      echo 1
+      echo 2
+    device: laptop
+    expect:
+      type: array
+      value: [0, 2]
