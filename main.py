@@ -29,9 +29,13 @@ def main() -> None:
     
     console.log(f"{log_level['info']} Reading config file")
     config = read_yaml("config.yaml")
-    
-    console.log(f"{log_level['info']} Applying config file")
-    
+
+    # Validate config file
+    if config_yamVal(config, log):
+        console.log(f"{log_level['info']} Applying config file")
+    else:
+        console.log(f"{log_level['error']} Could not validate config file")
+
     devices = {}
     for device in config["autofat"]["network"]:
         devices[device["name"]] = {"ip": device["ip"], "user": device["credentials"]["user"], "pwd": device["credentials"]["pwd"]}

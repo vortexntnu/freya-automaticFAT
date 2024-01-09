@@ -1,5 +1,5 @@
-name: Devops
-taks:
+name: DevOps
+tasks:
   - name: Test RPI connection
     command: ping -c 4 10.0.1.99 | grep "4 received"
     device: laptop
