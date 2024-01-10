@@ -8,3 +8,6 @@ Various task types are defined to cater to different purposes:
 - **String Tasks:** These tasks execute one or more commands and check if the expected string appears in the resulting string.
 - **Int Tasks:** These tasks execute one or more commands and compare the resulting value against a predefined expected value or range of values.
 - **Array Tasks:** These tasks execute one or more commands and compare the results against a predefined array.
+
+## Failed Tasks
+If any task in a specific FAT fails, it will mark the entire FAT as failed, and the main program will move onto the next FAT.

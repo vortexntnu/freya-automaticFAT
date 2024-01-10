@@ -136,7 +136,7 @@ def main() -> None:
                         result = int(run_str(task["command"], devices[task["device"]]))
                     
                     console.log(result)
-                    if result == task["expect"]["value"]: # WIP
+                    if result == task["expect"]["value"]:
                         console.log(f"{log_level['info']} Task successfully completed")
                     else:
                         fat["status"] = fat_status["failed"]
@@ -149,7 +149,7 @@ def main() -> None:
                         result = int(run_str(task["command"], devices[task["device"]]))
                     
                     console.log(result)
-                    if result in range(task["expect"]["minvalue"], task["expect"]["maxvalue"]): # WIP
+                    if result in range(task["expect"]["minvalue"], task["expect"]["maxvalue"]):
                         console.log(f"{log_level['info']} Task successfully completed")
                     else:
                         fat["status"] = fat_status["failed"]
