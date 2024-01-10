@@ -64,8 +64,6 @@ def main() -> None:
                         "file": file, 
                         "content": fat})
     
-    # console.log(status)
-
     console.log(f"{log_level['info']} Ordering FATs")
     
     # sort FATs by priority

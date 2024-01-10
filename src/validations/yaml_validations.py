@@ -58,57 +58,57 @@ def fat_yamVal(data: dict | list, devices: dict, console: Console) -> bool:
         return False
     
     for task in data["tasks"]:
-        if "name" not in task:
+        if "name" not in task or task["name"] == None:
             console.log(f"{log_level['warning']} FAT: {data['name']}, Task lacks a name.")
             return False
         
         if "device" in task:
             if not task["device"] == "laptop":
                 if not task["device"] in devices:
-                    console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, device in task does not match any stated in config ({devices}).")
+                    console.log(f"{log_level['warning']} FAT: {data['name']}, Task: {task['name']}, device in task does not match any stated in config ({devices}).")
                     return False
 
-        if "expect" not in task:
-            console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, lacks an expect.")
+        if "expect" not in task or task["expect"] == None:
+            console.log(f"{log_level['warning']} FAT: {data['name']}, Task: {task['name']}, lacks an expect.")
             return False
         
         if not type(task["expect"]) is list and not type(task["expect"]) is dict:
-            console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, expect is misconfigured.")
+            console.log(f"{log_level['warning']} FAT: {data['name']}, Task: {task['name']}, expect is misconfigured.")
             return False
         
-        if "type" not in task["expect"]:
-            console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, in lacks a expect type.")
+        if "type" not in task["expect"] or task["expect"]["type"] == None:
+            console.log(f"{log_level['warning']} FAT: {data['name']}, Task: {task['name']}, in lacks a expect type.")
             return False
         
         if not task["expect"]["type"] in types:
-            console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, expect type is an unsupported type, must be either manual, boolean, string, int or array.")
+            console.log(f"{log_level['warning']} FAT: {data['name']}, Task: {task['name']}, expect type is an unsupported type, must be either manual, boolean, string, int or array.")
             return False
 
         if task["expect"]["type"] == "int":
-            if "minvalue" in task:
-                if "maxvalue" not in task:
-                    console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, in lacks a expect value.")
+            if "minvalue" in task["expect"]:
+                if "maxvalue" not in task["expect"] or task["expect"]["maxvalue"] == None:
+                    console.log(f"{log_level['warning']} FAT: {data['name']}, Task: {task['name']}, lacks a expect value.")
                     return False
-            elif "maxvalue" in task:
-                if "maxvalue" not in task:
-                    console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, in lacks a expect value.")
+            if "maxvalue" in task["expect"]:
+                if "minvalue" not in task["expect"] or task["expect"]["minvalue"] == None:
+                    console.log(f"{log_level['warning']} FAT: {data['name']}, Task: {task['name']}, lacks a expect value.")
                     return False
-        elif "value" not in task["expect"]:
-            console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, in lacks a expect value.")
+        elif "value" not in task["expect"] or task["expect"]["value"] == None:
+            console.log(f"{log_level['warning']} FAT: {data['name']}, Task: {task['name']}, lacks a expect value.")
             return False
         
         if task["expect"]["type"] == "boolean":
             if not task["expect"]["value"] == True and not task["expect"]["value"] == False:
-                console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, expect value is an unsupported value, must be eather True or False.")
+                console.log(f"{log_level['warning']} FAT: {data['name']}, Task: {task['name']}, expect value is an unsupported value, must be eather True or False.")
                 return False
         
         if task["expect"]["type"] == "manual":
-            if "prompt" not in task["expect"]:
-                console.log(f"{log_level['warning']} FAT: {data['name']} Task: {task['name']}, a manual expect needs a promt (question to be answered).")
+            if "prompt" not in task["expect"] or task["expect"]["prompt"] == None:
+                console.log(f"{log_level['warning']} FAT: {data['name']}, Task: {task['name']}, a manual expect needs a prompt (question to be answered).")
                 return False
         elif task["expect"]["type"] == "boolean":
-            if "command" not in task:
-                console.log(f"{log_level['warning']} FAT: {data['name']} Task {task['name']}, a boolean expect needs a task command.")
+            if "command" not in task or task["command"] == None:
+                console.log(f"{log_level['warning']} FAT: {data['name']}, Task {task['name']}, a boolean expect needs a task command.")
                 return False
 
     return True
