@@ -23,16 +23,10 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
     if task["expect"]["type"] == "string":
         result = run_str(task["command"])
         
-        if isinstance(task["expect"]["value"], str):
-            if task["expect"]["value"] in result:
-                console.log(f"{log_level['info']} Task successfully completed"); return True
-            else:
-                task_fail(fat); return False
-        elif isinstance(task["expect"]["value"], list):
-            if all(item in result for item in task["expect"]["value"]):
-                console.log(f"{log_level['info']} Task successfully completed"); return True
-            else:
-                task_fail(fat); return False
+        if isinstance(task["expect"]["value"], str) and task["expect"]["value"] in result:
+            console.log(f"{log_level['info']} Task successfully completed"); return True
+        elif isinstance(task["expect"]["value"], list) and all(item in result for item in task["expect"]["value"]):
+            console.log(f"{log_level['info']} Task successfully completed"); return True
         else:
             task_fail(fat); return False
 
@@ -40,17 +34,12 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
     if task["expect"]["type"] == "int":
         result = int(run_str(task["command"]))
 
-        if "value" in task["expect"]:
-            if result == task["expect"]["value"]: # WIP
-                console.log(f"{log_level['info']} Task successfully completed"); return True
-            else:
-                task_fail(fat); return False
-        
-        else: # assume result in a range 
-            if result in range(task["expect"]["minvalue"], task["expect"]["maxvalue"]): # WIP
-                console.log(f"{log_level['info']} Task successfully completed"); return True
-            else:
-                task_fail(fat); return False
+        if "value" in task["expect"] and result == task["expect"]["value"]:
+            console.log(f"{log_level['info']} Task successfully completed"); return True
+        elif result in range(task["expect"]["minvalue"], task["expect"]["maxvalue"]): # assume result in a range 
+            console.log(f"{log_level['info']} Task successfully completed"); return True
+        else:
+            task_fail(fat); return False
 
 
     # if task expect is of type array
