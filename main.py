@@ -90,11 +90,6 @@ def main() -> None:
     # ------------------------------------------------------
     # Loop and do FATs
     # ------------------------------------------------------
-    
-    # if a task fail
-    def task_fail(fat: dict | list):
-        fat["status"] = fat_status["failed"]
-        console.log(f"{log_level['error']} Task failed")
 
     # loop through all fats registered
     for fat in status:
