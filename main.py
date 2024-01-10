@@ -1,7 +1,8 @@
 from src.tools.file_tools import read_yaml, filetypeindir, get_abs_path
-from src.tools.cli_tools import run_bool, run_str
+from src.tools.cli_tools import ssh_wrap
 from src.tools.rich_print import log_level, fat_status
 from src.validations.yaml_validations import config_yamVal, fat_yamVal
+from src.tools.task_tools import run_task
 
 import fire
 import time
@@ -89,124 +90,37 @@ def main() -> None:
     # ------------------------------------------------------
     # Loop and do FATs
     # ------------------------------------------------------
-        
+    
+    # if a task fail
+    def task_fail(fat: dict | list):
+        fat["status"] = fat_status["failed"]
+        console.log(f"{log_level['error']} Task failed")
+
+    # loop through all fats registered
     for fat in status:
         console.log(f"\n{log_level['info']} Beginning FAT: {fat['name']}")
         fat["status"] = fat_status["running"]
 
+        # loop through all tasks in a fat
         for task in fat["content"]["tasks"]:
             console.log(f"{log_level['info']} Doing task: {task['name']}")
 
-            # if task expect is of type boolean
-            if task["expect"]["type"] == "boolean":
-                if "device" not in task or task["device"] == "laptop":
-                    result = run_bool(task["command"])
-                else:
-                    result = run_bool(task["command"], devices[task["device"]])
-                
-                if result == task["expect"]["value"]:
-                    console.log(f"{log_level['info']} Task successfully completed")
-                else:
-                    fat["status"] = fat_status["failed"]
-                    console.log(f"{log_level['error']} Task failed")
-                    break
+            # if the task should be ran on a different device
+            if "device" in task and task["device"] != "laptop":
+                task["command"] = ssh_wrap(task["command"], devices[task["device"]])
 
-            # if task expect is of type string
-            if task["expect"]["type"] == "string":
-                if "device" not in task or task["device"] == "laptop":
-                    result = run_str(task["command"])
-                else:
-                    result = run_str(task["command"], devices[task["device"]])
-                
-                console.log(result)
-                console.log(task["expect"]["value"])
-                if task["expect"]["value"] in result:
-                    console.log(f"{log_level['info']} Task successfully completed")
-                else:
-                    fat["status"] = fat_status["failed"]
-                    console.log(f"{log_level['error']} Task failed")
-                    break
-
-            # if task expect is of type int
-            if task["expect"]["type"] == "int":
-                if "value" in task["expect"]:
-                    if "device" not in task or task["device"] == "laptop":
-                        result = int(run_str(task["command"]))
-                    else:
-                        result = int(run_str(task["command"], devices[task["device"]]))
-                    
-                    console.log(result)
-                    if result == task["expect"]["value"]: # WIP
-                        console.log(f"{log_level['info']} Task successfully completed")
-                    else:
-                        fat["status"] = fat_status["failed"]
-                        console.log(f"{log_level['error']} Task failed")
-                        break
-                elif "minvalue" in task["expect"] or "maxvalue" in task["expect"]:
-                    if "device" not in task or task["device"] == "laptop":
-                        result = int(run_str(task["command"]))
-                    else:
-                        result = int(run_str(task["command"], devices[task["device"]]))
-                    
-                    console.log(result)
-                    if result in range(task["expect"]["minvalue"], task["expect"]["maxvalue"]): # WIP
-                        console.log(f"{log_level['info']} Task successfully completed")
-                    else:
-                        fat["status"] = fat_status["failed"]
-                        console.log(f"{log_level['error']} Task failed")
-                        break
-
-
-            # if task expect is of type array
-            if task["expect"]["type"] == "array":
-                if "device" not in task or task["device"] == "laptop":
-                    result = run_str(task["command"])
-                else:
-                    result = run_str(task["command"], devices[task["device"]])
-                
-                console.log(result)
-                if str(task["expect"]["value"]) in result:
-                    console.log(f"{log_level['info']} Task successfully completed")
-                else:
-                    fat["status"] = fat_status["failed"]
-                    console.log(f"{log_level['error']} Task failed")
-                    break
-
-            # if task expect is of type manual
-            elif task["expect"]["type"] == "manual":
-                userInput = "R"
-                while userInput == "R" or userInput == "REPEAT":
-                    console.print(f"\t\t[bright_yellow]    {task['expect']['prompt']}[/bright_yellow]", end=" ")
-
-                    if "command" in task:
-                        if "device" not in task or task["device"] == "laptop":
-                            _ = run_bool(task["command"])
-                        else:
-                            _ = run_bool(task["command"], devices[task["device"]])
-
-                    userInput = input("(y/N, r = repeat): ").upper()
-                    
-                    if userInput == "Y" or userInput == "YES":
-                        taskValue = True
-                    elif userInput == "R" or userInput == "REPEAT":
-                        continue
-                    else:
-                        taskValue = False
-
-                    if taskValue == task["expect"]["value"]:
-                        console.log(f"{log_level['info']} Task successfully completed")
-                    else:
-                        console.log(f"{log_level['error']} Task failed")
-                        fat["status"] = fat_status["failed"]
-                        break
-                if fat["status"] == fat_status["failed"]:
-                    break
+            # do task, if fail break for-loop
+            if not run_task(fat, task, console):
+                break
                 
         # check fat status 
         if fat["status"] == fat_status["running"]:
             fat["status"] = fat_status["success"]
-            console.log(f"{log_level['info']} FAT: {fat['name']}, successful")  
-        elif fat["status"] == fat_status["failed"] and "priority" in fat["content"]:
+            console.log(f"{log_level['info']} FAT: {fat['name']}, [green]successful[/green]")  
+        else:
+            console.log(f"{log_level['info']} FAT: {fat['name']}, [red]failed[/red]")
+        
+        if fat["status"] == fat_status["failed"] and "priority" in fat["content"]:
             break
 
 
