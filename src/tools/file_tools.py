@@ -1,8 +1,12 @@
+from src.tools.rich_print import log_level, fat_status
+from src.validations.yaml_validations import fat_yamVal
+
+from dotenv import load_dotenv
 from pathlib import Path
 import os
-
 import yaml
-from dotenv import load_dotenv
+
+from rich.console import Console
 
 
 # Get absolute path to this project
@@ -47,3 +51,49 @@ def filetypeindir(dir_path: str, suffix: str) -> list:
             files.append(file)
 
     return files
+
+
+# Finds all FATs in directory, read and sort them after priority
+def get_fat(devices: dict, console: Console) -> dict | list:
+    status = []
+
+    # access FAT dir, add all yaml-files and insert into status
+    fatDir = get_abs_path("FATs")
+    files = filetypeindir(fatDir, ".yaml")
+    for file in files:
+        file = get_abs_path(f"FATs/{file}")
+        console.log(f"{log_level['info']} Found FAT: {file}")
+
+        fat = read_yaml(file)
+        
+        # fat validation
+        console.log(f"{log_level['info']} Validating FAT")
+        if not fat_yamVal(fat, devices, console):
+            console.log(f"{log_level['warning']} FAT {file} is invalid")
+        else:
+            console.log(f"{log_level['info']} FAT passed validation")
+            status.append({"name":    fat["name"],
+                           "status":  fat_status["pending"], 
+                           "file":    file, 
+                           "content": fat})
+
+    console.log(f"{log_level['info']} Ordering FATs after priority")
+    
+    # sort FATs by priority
+    x = 0
+    while x < (len(status) - 1):
+        y = len(status) - 1
+
+        while y > x:
+            pri_x = [status[x]["content"]["priority"] if "priority" in status[x]["content"] else 0]
+            pri_y = [status[y]["content"]["priority"] if "priority" in status[y]["content"] else 0]
+
+            if pri_y > pri_x:
+                temp = status[x]
+                status[x] = status[y]
+                status[y] = temp
+            
+            y -= 1
+        x += 1
+
+    return status
