@@ -1,5 +1,5 @@
 name: DevOps
-# priority: 100
+priority: 100
 tasks:
   - name: Test RPI connection
     command: ping -c 4 10.0.1.99 | grep "4 received"
@@ -8,31 +8,52 @@ tasks:
       type: boolean
       value: True
 
+  - name: Validate RPI bashrc
+    command: cat ~/.bashrc
+    device: rpi
+    expect: 
+      type: string
+      value: [
+        "rpi-ip=10.0.0.99",
+        "xavier-ip=10.0.0.100",
+        "laptop-ip=10.0.0.35",
+        "export ROS_MASTER_URI=http://$rpi-ip:11311",
+        "export ROS_IP=$rpi-ip",
+        "export ROS_HOSTNAME=$rpi-ip"
+      ]
+  
   - name: Test Xavier connection
     command: ping -c 4 10.0.1.100 | grep "4 received"
     device: laptop
     expect: 
       type: boolean
       value: True
-
-  - name: Validate RPI bashrc
-    command: cat ~/.bashrc | grep 'export ' | grep ''
-    device: rpi
-    expect: 
-      type: boolean
-      value: True
   
   - name: Validate Xavier bashrc
-    command: cat ~/.bashrc | grep 'export ' | grep ''
+    command: cat ~/.bashrc
     device: xavier
     expect: 
-      type: boolean
-      value: True
-
-  - name: Power check
-    expect:
-      type: manual
-      prompt: Is laptop connected to power?
-      value: True
+      type: string
+      value: [
+        "rpi-ip=10.0.0.99",
+        "xavier-ip=10.0.0.100",
+        "laptop-ip=10.0.0.35",
+        "export ROS_MASTER_URI=http://$rpi-ip:11311",
+        "export ROS_IP=$xavier-ip",
+        "export ROS_HOSTNAME=$xavier-ip"
+      ]
+  
+  - name: Validate laptop bashrc
+    command: cat ~/.bashrc
+    expect: 
+      type: string
+      value: [
+        "rpi-ip=10.0.0.99",
+        "xavier-ip=10.0.0.100",
+        "laptop-ip=10.0.0.35",
+        "export ROS_MASTER_URI=http://$rpi-ip:11311",
+        "export ROS_IP=$laptop-ip",
+        "export ROS_HOSTNAME=$laptop-ip"
+      ]
 
       
