@@ -3,10 +3,10 @@ autofat:
     - name: rpi
       ip: 10.0.1.99
       credentials:
-        user: ubuntu
+        user: vortex
         pwd: ${RPI_PWD}
     - name: xavier
       ip: 10.0.1.100
       credentials:
-        user: ubuntu
+        user: vortex
         pwd: ${XAVIER_PWD}

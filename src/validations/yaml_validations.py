@@ -106,9 +106,9 @@ def fat_yamVal(data: dict | list, devices: dict, console: Console) -> bool:
             if "prompt" not in task["expect"] or task["expect"]["prompt"] == None:
                 console.log(f"{log_level['warning']} FAT: {data['name']}, Task: {task['name']}, a manual expect needs a prompt (question to be answered).")
                 return False
-        elif task["expect"]["type"] == "boolean":
+        elif task["expect"]["type"] != "manual":
             if "command" not in task or task["command"] == None:
-                console.log(f"{log_level['warning']} FAT: {data['name']}, Task {task['name']}, a boolean expect needs a task command.")
+                console.log(f"{log_level['warning']} FAT: {data['name']}, Task {task['name']}, all non-manual task expects need a task command.")
                 return False
 
     return True
