@@ -14,13 +14,14 @@ def run_bool(command: str) -> bool:
         return False
 
 # run command, output text
-def run_str(command: str) -> (bool, str):
+def run_str(command: str) -> str:
     try:
         result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
         
         return result.decode("utf-8")
 
     except Exception as e:
+        print("Command failed, check if needed package is installed.")
         return ""
 
 
