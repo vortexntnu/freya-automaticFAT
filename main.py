@@ -22,20 +22,24 @@ def main() -> None:
     # init
     # ------------------------------------------------------
 
+    # create console
     console = Console()
 
     console.rule(f"Automatic FAT, Freya, {datetime.now()}")
     
+    # read and validate config
     config = read_yaml("config.yaml")
     if config_yamVal(config, console):
         console.log(f"{log_level['info']} Applying config file")
     else:
         console.log(f"{log_level['error']} Config did not pass validation"); return
     
+    # use config to identify devices
     devices = {}
     for device in config["autofat"]["network"]:
         devices[device["name"]] = {"ip": device["ip"], "user": device["credentials"]["user"], "pwd": device["credentials"]["pwd"]}
     
+    # search for avaliable yaml files in /FATs, they are assumed to be FATs
     console.log(f"{log_level['info']} Searching for FATs")
     status = get_fat(devices, console)
     
@@ -79,6 +83,7 @@ def main() -> None:
 
     console.rule("Summary")
 
+    # create table of all FATs and their "end" statuses
     table = Table(box=box.MINIMAL)
 
     table.add_column("File", justify="left")
