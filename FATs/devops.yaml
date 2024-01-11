@@ -2,11 +2,14 @@ name: DevOps
 priority: 100
 tasks:
   - name: Test RPI connection
-    command: ping -c 4 10.0.1.99 | grep "4 received"
-    device: laptop
+    command: ping 10.0.1.99
     expect: 
-      type: boolean
-      value: True
+      type: string
+      value: [
+        "bytes=",
+        "time=",
+        "TTL="
+      ]
 
   - name: Validate RPI bashrc
     command: cat ~/.bashrc
@@ -23,11 +26,14 @@ tasks:
       ]
   
   - name: Test Xavier connection
-    command: ping -c 4 10.0.1.100 | grep "4 received"
-    device: laptop
+    command: ping 10.0.1.100
     expect: 
-      type: boolean
-      value: True
+      type: string
+      value: [
+        "bytes=",
+        "time=",
+        "TTL="
+      ]
   
   - name: Validate Xavier bashrc
     command: cat ~/.bashrc
