@@ -1,4 +1,4 @@
-name: DevOps
+name: Network
 priority: 100
 tasks:
   - name: Test RPI connection

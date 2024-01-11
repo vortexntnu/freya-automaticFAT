@@ -1,0 +1,8 @@
+name: Ros2
+priority: 99
+tasks:
+  - name: Source bin/bash and Start ros core
+    command: source bin/bash > roscore
+    expect:
+      type: boolean
+      value: True
