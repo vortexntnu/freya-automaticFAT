@@ -62,22 +62,17 @@ def get_fat(devices: dict, console: Console) -> dict | list:
     files = filetypeindir(fatDir, ".yaml")
     for file in files:
         file = get_abs_path(f"FATs/{file}")
-        console.log(f"{log_level['info']} Found FAT: {file}")
-
         fat = read_yaml(file)
-        
-        # fat validation
-        console.log(f"{log_level['info']} Validating FAT")
-        if not fat_yamVal(fat, devices, console):
-            console.log(f"{log_level['warning']} FAT {file} is invalid")
+        valid, msg = fat_yamVal(fat, devices)
+
+        if not valid:
+            console.log(f"{log_level['warning']} Found FAT: {file}, however it is invalid: {msg}")
         else:
-            console.log(f"{log_level['info']} FAT passed validation")
+            console.log(f"{log_level['info']} Found FAT: {file}")
             status.append({"name":    fat["name"],
                            "status":  fat_status["pending"], 
                            "file":    file, 
                            "content": fat})
-
-    console.log(f"{log_level['info']} Ordering FATs after priority")
     
     # sort FATs by priority
     x = 0

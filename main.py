@@ -26,17 +26,17 @@ def main() -> None:
 
     console.rule(f"Automatic FAT, Freya, {datetime.now()}")
     
-    console.log(f"{log_level['info']} Reading config file")
+    # console.log(f"{log_level['info']} Reading config file")
     config = read_yaml("config.yaml")
 
-    console.log(f"{log_level['info']} Validate config file")
+    # console.log(f"{log_level['info']} Validate config file")
     if config_yamVal(config, console):
-        console.log(f"{log_level['info']} Finished validating config")
+        console.log(f"{log_level['info']} Applying config file")
     else:
         console.log(f"{log_level['error']} Config did not pass validation"); return
     
 
-    console.log(f"{log_level['info']} Applying config file")
+    # console.log(f"{log_level['info']} Applying config file")
     
     devices = {}
     for device in config["autofat"]["network"]:
