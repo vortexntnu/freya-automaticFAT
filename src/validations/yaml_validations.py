@@ -2,7 +2,7 @@ from src.tools.rich_print import log_level
 
 from rich.console import Console
 
-types = ["boolean", "manual", "string", "int", "array"]
+types = ["boolean", "manual", "string", "int", "array", "persistent"]
 
 # the validator of yamles
 def config_yamVal(data: dict | list, console: Console) -> bool:
@@ -73,7 +73,7 @@ def fat_yamVal(data: dict | list, devices: dict) -> tuple():
             return False, f"Task: {task['name']}, in lacks a expect type."
         
         if not task["expect"]["type"] in types:
-            return False, f"Task: {task['name']}, expect type is an unsupported type, must be either manual, boolean, string, int or array."
+            return False, f"Task: {task['name']}, expect type is an unsupported type, must be either manual, boolean, string, int, array or persistent."
 
         if task["expect"]["type"] == "int":
             if "minvalue" in task["expect"]:

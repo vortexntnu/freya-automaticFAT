@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  linux-env:
+    container_name: lin-env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # image: ubuntu:20.04
+    ports:
+      - 7007:7007
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./:/Freya-automaticFAT
+
+# enter container by command:
+#   docker exec -it lin-env "/bin/bash"

@@ -2,7 +2,7 @@ name: Ros2
 priority: 99
 tasks:
   - name: Source bin/bash and Start ros core
-    command: source bin/bash > roscore
+    command: source bin/bash && roscore
     expect:
-      type: boolean
+      type: persistent
       value: True

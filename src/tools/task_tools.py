@@ -1,5 +1,5 @@
 from src.tools.rich_print import log_level, fat_status
-from src.tools.cli_tools import run_bool, run_str
+from src.tools.cli_tools import run_bool, run_str, run_presistent
 
 from rich.console import Console
 
@@ -20,7 +20,7 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
             task_fail(fat); return False
 
     # if task expect is of type string
-    if task["expect"]["type"] == "string":
+    elif task["expect"]["type"] == "string":
         result = run_str(task["command"])
         
         if isinstance(task["expect"]["value"], str) and task["expect"]["value"] in result:
@@ -31,7 +31,7 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
             task_fail(fat); return False
 
     # if task expect is of type int
-    if task["expect"]["type"] == "int":
+    elif task["expect"]["type"] == "int":
         result = int(run_str(task["command"]))
 
         if "value" in task["expect"] and result == task["expect"]["value"]:
@@ -43,7 +43,7 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
 
 
     # if task expect is of type array
-    if task["expect"]["type"] == "array":
+    elif task["expect"]["type"] == "array":
         result = run_str(task["command"])
         
         if str(task["expect"]["value"]) in result:
@@ -76,3 +76,11 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
             
         if fat["status"] == fat_status["failed"]:
             return False
+    
+    elif task["expect"]["type"] == "persistent":
+        result = run_presistent(task["command"])
+        
+        if result == task["expect"]["value"]:
+            console.log(f"{log_level['info']} Task successfully completed"); return True
+        else:
+            task_fail(fat); return False

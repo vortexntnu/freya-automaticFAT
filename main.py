@@ -5,16 +5,12 @@ from src.tools.rich_print import log_level, fat_status
 from src.validations.yaml_validations import config_yamVal
 
 import fire
-import time
 from datetime import datetime
 
-from rich import print, box
+from rich import box
 from rich.console import Console
 from rich.table import Table
 
-import fire
-
-status = []
 
 def main() -> None:
 

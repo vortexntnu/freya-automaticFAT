@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import subprocess
-from typing import Union
+import time
+import atexit
 
 # run command, output true/false => command success or not
 def run_bool(command: str) -> bool:
@@ -23,6 +24,25 @@ def run_str(command: str) -> str:
     except Exception as e:
         print("Command failed, check if needed package is installed.")
         return ""
+
+def run_presistent(command: str) -> bool:
+    try:
+        process = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT)
+
+        # await process start
+        while process.poll() is None:
+            time.sleep(1)
+
+        # clean up process at exit
+        def cleanup() -> None:
+            process.terminate()
+            process.wait()
+        atexit.register(cleanup())
+        
+        return True
+    
+    except Exception as e:
+        return False
 
 
 # add ssh wrapping to command
