@@ -1,0 +1,8 @@
+name: Auto logging
+tasks:
+  - name: Check automatic logging
+    command: 
+    device: rpi
+    expect:
+      type: Boolean
+      value: True
