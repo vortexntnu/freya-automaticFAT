@@ -1,0 +1,22 @@
+name: Network
+priority: 100
+tasks:
+  - name: Test RPI connection
+    command: ping -c 4 10.0.1.99
+    expect: 
+      type: string
+      value: [
+        # "bytes=",
+        "time=",
+        "ttl="
+      ]
+  
+  - name: Test Xavier connection
+    command: ping -c 4 10.0.1.100
+    expect: 
+      type: string
+      value: [
+        # "bytes=",
+        "time=",
+        "ttl="
+      ]
