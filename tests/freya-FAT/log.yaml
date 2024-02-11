@@ -4,5 +4,5 @@ tasks:
     command: 
     device: rpi
     expect:
-      type: Boolean
+      type: boolean
       value: True

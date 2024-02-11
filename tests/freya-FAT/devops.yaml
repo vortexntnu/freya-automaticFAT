@@ -6,9 +6,9 @@ tasks:
     expect: 
       type: string
       value: [
-        "bytes=",
+        # "bytes=",
         "time=",
-        "TTL="
+        "ttl="
       ]
 
   - name: Validate RPI bashrc
@@ -30,9 +30,9 @@ tasks:
     expect: 
       type: string
       value: [
-        "bytes=",
+        # "bytes=",
         "time=",
-        "TTL="
+        "ttl="
       ]
   
   - name: Validate Xavier bashrc

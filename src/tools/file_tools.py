@@ -46,7 +46,7 @@ def read_yaml(file_path: str) -> dict | list:
 # Return a list of files with a given ending
 def filetypeindir(dir_path: str, suffix: str) -> list:
     files = []
-    for file in os.listdir(get_abs_path(dir_path)):
+    for file in os.listdir(dir_path):
         if file.endswith(suffix):
             files.append(file)
 
@@ -57,11 +57,27 @@ def filetypeindir(dir_path: str, suffix: str) -> list:
 def get_fat(devices: dict, console: Console) -> dict | list:
     status = []
 
-    # access FAT dir, add all yaml-files and insert into status
-    fatDir = get_abs_path("FATs")
+    # access test dir
+    testDir = get_abs_path("tests")
+    fats = filetypeindir(testDir, "")
+
+    # Ask for which fat to run
+    if fats:
+        p_str = "Found FATs = [ "
+        for i in range(0, len(fats)): 
+            p_str += f"{i}: {fats[i]}, "
+        console.log(f"{log_level['info']} {p_str} ]")
+        console.print("\t\t[bright_yellow]    Choose one of the available FATs(index/key):[/bright_yellow]", end=" ")
+        fat = int(input(""))
+    else:
+        console.log(f"{log_level['error']} Can't find any FATs.")
+        return []
+
+    # identify scripts in fat and validate
+    fatDir = os.path.join(testDir, fats[fat])
     files = filetypeindir(fatDir, ".yaml")
     for file in files:
-        file = get_abs_path(f"FATs/{file}")
+        file = os.path.join(fatDir, file)
         fat = read_yaml(file)
         valid, msg = fat_yamVal(fat, devices)
 

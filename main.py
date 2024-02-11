@@ -21,7 +21,7 @@ def main() -> None:
     # create console
     console = Console()
 
-    console.rule(f"Automatic FAT, Freya, {datetime.now()}")
+    console.rule(f"Automatic FAT, {datetime.now()}")
     
     # read and validate config
     config = read_yaml("config.yaml")
@@ -76,20 +76,20 @@ def main() -> None:
     # ------------------------------------------------------
     # End
     # ------------------------------------------------------    
+    if status:
+        console.rule("Summary")
 
-    console.rule("Summary")
+        # create table of all FATs and their "end" statuses
+        table = Table(box=box.MINIMAL)
 
-    # create table of all FATs and their "end" statuses
-    table = Table(box=box.MINIMAL)
+        table.add_column("File", justify="left")
+        table.add_column("FAT", justify="left", min_width=20)
+        table.add_column("Status", justify="right")
 
-    table.add_column("File", justify="left")
-    table.add_column("FAT", justify="left", min_width=20)
-    table.add_column("Status", justify="right")
+        for row in status:  
+            table.add_row(row["file"], row["name"], row["status"])
 
-    for row in status:  
-        table.add_row(row["file"], row["name"], row["status"])
-
-    console.print(table)
+        console.print(table)
 
 
 
