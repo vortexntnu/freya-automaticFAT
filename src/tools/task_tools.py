@@ -6,9 +6,9 @@ from rich.console import Console
 
 def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
     # if a task fail
-    def task_fail(fat: dict | list):
+    def task_fail(fat: dict | list, command: str):
         fat["status"] = fat_status["failed"]
-        console.log(f"{log_level['error']} Task failed")
+        console.log(f"{log_level['error']} [red]Failed at running command:[/red] {command}")
 
     # if task expect is of type boolean
     if task["expect"]["type"] == "boolean":
@@ -17,7 +17,7 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
         if result == task["expect"]["value"]:
             console.log(f"{log_level['info']} Task successfully completed"); return True
         else:
-            task_fail(fat); return False
+            task_fail(fat, task["command"]); return False
 
     # if task expect is of type string
     elif task["expect"]["type"] == "string":
@@ -28,7 +28,7 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
         elif isinstance(task["expect"]["value"], list) and all(item in result for item in task["expect"]["value"]):
             console.log(f"{log_level['info']} Task successfully completed"); return True
         else:
-            task_fail(fat); return False
+            task_fail(fat, task["command"]); return False
 
     # if task expect is of type int
     elif task["expect"]["type"] == "int":
@@ -39,7 +39,7 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
         elif result in range(task["expect"]["minvalue"], task["expect"]["maxvalue"]): # assume result in a range 
             console.log(f"{log_level['info']} Task successfully completed"); return True
         else:
-            task_fail(fat); return False
+            task_fail(fat, task["command"]); return False
 
 
     # if task expect is of type array
@@ -49,7 +49,7 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
         if str(task["expect"]["value"]) in result:
             console.log(f"{log_level['info']} Task successfully completed"); return True
         else:
-            task_fail(fat); return False
+            task_fail(fat, task["command"]); return False
 
     # if task expect is of type manual
     elif task["expect"]["type"] == "manual":
@@ -72,7 +72,7 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
             if taskValue == task["expect"]["value"]:
                 console.log(f"{log_level['info']} Task successfully completed"); return True
             else:
-                task_fail(fat); return False
+                task_fail(fat, task["command"]); return False
             
         if fat["status"] == fat_status["failed"]:
             return False
@@ -83,4 +83,4 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
         if result == task["expect"]["value"]:
             console.log(f"{log_level['info']} Task successfully completed"); return True
         else:
-            task_fail(fat); return False
+            task_fail(fat, task["command"]); return False

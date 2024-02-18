@@ -22,7 +22,7 @@ def run_str(command: str) -> str:
         return result.decode("utf-8")
 
     except Exception as e:
-        print("Command failed, check if needed package is installed.")
+        # print("Command failed, check if needed package is installed.")
         return ""
 
 def run_presistent(command: str) -> bool:

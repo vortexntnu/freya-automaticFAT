@@ -1,12 +1,22 @@
 autofat:
   network:
-    - name: rpi
+    - name: freya-rpi
       ip: 10.0.1.99
       credentials:
         user: vortex
-        pwd: ${RPI_PWD}
-    - name: xavier
+        pwd: ${FREYA_RPI_PWD}
+    - name: freya-xavier
       ip: 10.0.1.100
       credentials:
         user: vortex
-        pwd: ${XAVIER_PWD}
+        pwd: ${FREYA_XAVIER_PWD}
+    - name: beluga-rpi
+      ip: 10.0.0.99
+      credentials:
+        user: vortex
+        pwd: ${BELUGA_RPI_PWD}
+    - name: beluga-xavier
+      ip: 10.0.0.100
+      credentials:
+        user: vortex
+        pwd: ${BELUGA_XAVIER_PWD}

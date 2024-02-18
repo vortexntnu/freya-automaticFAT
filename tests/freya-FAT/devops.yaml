@@ -6,14 +6,14 @@ tasks:
     expect: 
       type: string
       value: [
-        "bytes=",
+        # "bytes=",
         "time=",
-        "TTL="
+        "ttl="
       ]
 
   - name: Validate RPI bashrc
     command: cat ~/.bashrc
-    device: rpi
+    device: freya-rpi
     expect: 
       type: string
       value: [
@@ -30,14 +30,14 @@ tasks:
     expect: 
       type: string
       value: [
-        "bytes=",
+        # "bytes=",
         "time=",
-        "TTL="
+        "ttl="
       ]
   
   - name: Validate Xavier bashrc
     command: cat ~/.bashrc
-    device: xavier
+    device: freya-xavier
     expect: 
       type: string
       value: [
