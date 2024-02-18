@@ -2,7 +2,7 @@ name: Auto logging
 tasks:
   - name: Check automatic logging
     command: 
-    device: rpi
+    device: freya-rpi
     expect:
       type: boolean
       value: True
