@@ -21,7 +21,7 @@ def main() -> None:
     # create console
     console = Console()
 
-    console.rule(f"Automatic FAT, Freya, {datetime.now()}")
+    console.rule(f"Automatic FAT, Beluga, {datetime.now()}")
     
     # read and validate config
     config = read_yaml("config.yaml")

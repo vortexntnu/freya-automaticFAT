@@ -1,4 +1,4 @@
-name: Ros2
+name: ROS2
 priority: 99
 tasks:
   - name: Source bin/bash and Start ros core
