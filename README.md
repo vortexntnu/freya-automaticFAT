@@ -1,5 +1,5 @@
-# Beluga-automaticFAT
-Automated Factory Acceptance Test (FAT) on Vortex NTNU's drone Beluga
+# Freya-automaticFAT
+Automated Factory Acceptance Test (FAT) on Vortex NTNU's drone Freya
 
 
 ## Requirements
