@@ -1,8 +1,9 @@
 name: Embedded
+priority: 100
 tasks:
   - name: Test I2C # check I2C address
     device: freya-rpi
-    command: lsmod | grep i2c
+    command: i2cdetect -y 1
     expect:
       type: string
       value: [
@@ -13,10 +14,13 @@ tasks:
 
   - name: Test BMS connection # check battery management system
     device: freya-rpi
-    command: 
+    command: |
+      cd vortex_ws
+      source install/setup.bash
+      ros2 launch bms bms_launch.py
     expect:
-      type: boolean
-      value: True
+      type: string
+      value: ["process started"]
 
   - name: Test BMS values # check for abnormal values
     device: freya-rpi
@@ -26,7 +30,7 @@ tasks:
       minvalue: 5
       maxvalue: 10
 
-  - name: Test thrusters
+  - name: Test thrusters # check thruster reaction to command
     device: freya-rpi
     command: 
     expect:

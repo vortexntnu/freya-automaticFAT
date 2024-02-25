@@ -1,5 +1,4 @@
 name: SITAW
-priority: 1000
 tasks:
   - name: String tasks
     command: echo "ASV says hi"
