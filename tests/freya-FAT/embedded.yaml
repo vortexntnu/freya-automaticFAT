@@ -1,0 +1,48 @@
+name: Embedded
+tasks:
+  - name: Test I2C # check I2C address
+    device: freya-rpi
+    command: lsmod | grep i2c
+    expect:
+      type: string
+      value: [
+        "21", # thrusters
+        "22", # temperature
+        "69", # PSM
+      ]
+
+  - name: Test BMS connection # check battery management system
+    device: freya-rpi
+    command: 
+    expect:
+      type: boolean
+      value: True
+
+  - name: Test BMS values # check for abnormal values
+    device: freya-rpi
+    command: 
+    expect:
+      type: int
+      minvalue: 5
+      maxvalue: 10
+
+  - name: Test thrusters
+    device: freya-rpi
+    command: 
+    expect:
+      type: manual
+      prompt: Did the thrusters make noise?
+      value: True
+
+  - name: Test joystick
+    device: freya-rpi
+    expect:
+      type: manual
+      prompt: 
+      value:
+
+  - name: Test thrusters with joystick
+    expect:
+      type: manual
+      prompt: Do the thrusters react to joystick movement?
+      value: True
