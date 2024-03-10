@@ -1,11 +1,33 @@
 name: ROS2
-priority: 99
+priority: 1
 tasks:
-  - name: Source bin/bash and Start ros core
-    command: source bin/bash && roscore
+  - name: Source ros and start auv
+    command: |
+      cd vortex_ws/ &&
+      source install/setup.bash &&
+      ros2 launch auv_setup "TO BE NAMED"
+    device: beluga-rpi
     expect:
       type: persistent
       value: True
+
+  - name: Check topics
+    command: |
+      source vortex_ws/install/setup.bash
+      ros2 topic list
+    device: beluga-rpi
+    expect:
+      type: string
+      value: ["softwareKillSwitch", "thrust/wrench_input", "thrust/thruster_forces"]
+
+  - name: Validate topic output
+    command: |
+      source vortex_ws/install/setup.bash
+      ros2 topic echo --once thrust/wrench_forces
+    device: beluga-rpi
+    expect:
+      type: string
+      value: [""]
 
 
 

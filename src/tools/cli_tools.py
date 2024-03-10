@@ -37,7 +37,7 @@ def run_presistent(command: str) -> bool:
         def cleanup() -> None:
             process.terminate()
             process.wait()
-        atexit.register(cleanup())
+        atexit.register(cleanup)
         
         return True
     

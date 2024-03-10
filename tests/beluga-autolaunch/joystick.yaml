@@ -1,9 +1,0 @@
-name: Joystick
-tasks:
-  - name: Start joystick
-    command: roslaunch lauch.sh
-    device: beluga-rpi
-    expect:
-      type: persistent
-      value: True
-

@@ -1,0 +1,12 @@
+Standarisert oppsett: hvor source ros2 on laptop, ta utganskpunkt i craptop. 
+
+source vortex_ws/install/setup.bash
+ros2 launch auv_setup "name of launch file"  (vortex_ws/src/vortex-auv/auv_setup/launch)
+	topside.launch = local / laptop
+		run on laptop for packages communincating with beluga
+ 
+list topics: softwareKillSwitch, thrust/wrench_input, thrust/thruster_forces
+topic echo: thrust/wrench_input, thrust/thruster_forces : make sense
+run pytests, mission/joystick_interface_auv
+
+	

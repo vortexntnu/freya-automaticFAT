@@ -1,0 +1,29 @@
+name: foxglow
+tasks:
+  - name: start foxglow interface
+    command: |
+      cd vortex_ws/ &&
+      source install/setup.bash &&
+      ros2 launch auv_setup "NAME OF LAUNCH FILE"
+    device: laptop
+    expect:
+      type: percistant
+      value: True 
+  
+  - name: Check ros topic
+    command: | 
+      source vortex_ws/install/setup.bash &&
+      ros2 topic list
+    device: laptop
+    expect:
+      type: string
+      value: [""]
+
+  - name: Validate topic output
+    command: | 
+      source vortex_ws/install/setup.bash &&
+      ros2 topic echo --once "TOPIC NAME"
+    device: laptop
+    expect:
+      type: string
+      value: [""]

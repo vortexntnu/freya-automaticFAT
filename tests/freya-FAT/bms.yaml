@@ -20,7 +20,7 @@ tasks:
       ros2 launch bms bms_launch.py
     expect:
       type: persistent
-      value: ["process started"]
+      value: True
 
   - name: Test BMS voltage values # check for abnormal values
     device: freya-rpi
@@ -58,23 +58,23 @@ tasks:
       minvalue: 0 # insert desired values
       maxvalue: 80
 
-  - name: Test thrusters # check thruster reaction to command
-    device: freya-rpi
-    command: 
-    expect:
-      type: manual
-      prompt: Did the thrusters make noise?
-      value: True
+  # - name: Test thrusters # check thruster reaction to command
+  #   device: freya-rpi
+  #   command: 
+  #   expect:
+  #     type: manual
+  #     prompt: Did the thrusters make noise?
+  #     value: True
 
-  - name: Test joystick
-    device: freya-rpi
-    expect:
-      type: manual
-      prompt: 
-      value:
+  # - name: Test joystick
+  #   device: freya-rpi
+  #   expect:
+  #     type: manual
+  #     prompt: 
+  #     value:
 
-  - name: Test thrusters with joystick
-    expect:
-      type: manual
-      prompt: Do the thrusters react to joystick movement?
-      value: True
+  # - name: Test thrusters with joystick
+  #   expect:
+  #     type: manual
+  #     prompt: Do the thrusters react to joystick movement?
+  #     value: True

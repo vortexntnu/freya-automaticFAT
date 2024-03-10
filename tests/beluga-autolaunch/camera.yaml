@@ -1,8 +1,0 @@
-name: Camera
-tasks:
-  - name: Start camera
-    command: roslaunch lauch.sh
-    device: beluga-xavier
-    expect:
-      type: persistent
-      value: True
