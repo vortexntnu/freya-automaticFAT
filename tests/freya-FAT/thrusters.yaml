@@ -7,11 +7,9 @@ tasks:
       type: string
       value: [
         "21", # thrusters
-        "22", # temperature
-        "69", # PSM
       ]
 
-  - name: Launch truster # check battery management system
+  - name: Launch thruster 
     device: freya-rpi
     command: | # fix
       cd vortex_ws &&
