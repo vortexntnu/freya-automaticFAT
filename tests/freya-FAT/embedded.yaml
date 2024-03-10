@@ -24,15 +24,18 @@ tasks:
 
   - name: Test BMS values # check for abnormal values
     device: freya-rpi
-    command: ros2 topic diagnostics # example
+    command: |
+      cd vortex_ws
+      source install/setup.bash
+      ros2 topic echo diagnostics 
     expect:
       type: int
-      minvalue: 5 # insert desired values
-      maxvalue: 10
+      minvalue: 20 # insert desired values
+      maxvalue: 100
 
   - name: Test thrusters # check thruster reaction to command
     device: freya-rpi
-    command: 
+    command: # command that would activate thrusters HERE
     expect:
       type: manual
       prompt: Did the thrusters make noise?
