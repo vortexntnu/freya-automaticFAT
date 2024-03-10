@@ -1,0 +1,80 @@
+name: BMS
+priority: 99
+tasks:
+  - name: Test I2C # check I2C address
+    device: freya-rpi
+    command: i2cdetect -y 1
+    expect:
+      type: string
+      value: [
+        "21", # thrusters
+        "22", # temperature
+        "69", # PSM
+      ]
+
+  - name: Launch BMS package # check battery management system
+    device: freya-rpi
+    command: |
+      cd vortex_ws &&
+      source install/setup.bash &&
+      ros2 launch bms bms_launch.py
+    expect:
+      type: persistent
+      value: ["process started"]
+
+  - name: Test BMS voltage values # check for abnormal values
+    device: freya-rpi
+    command: |
+      source vortex_ws/install/setup.bash && 
+      ros2 topic echo --once /diagnostics | 
+        grep "voltage" -A 1 | 
+        grep -Eo '[0-9.]{1,12}'
+    expect:
+      type: int
+      minvalue: 20 # insert desired values
+      maxvalue: 28
+
+  - name: Test BMS current values # check for abnormal values
+    device: freya-rpi
+    command: |
+      source vortex_ws/install/setup.bash && 
+      ros2 topic echo --once /diagnostics | 
+        grep "current" -A 1 | 
+        grep -Eo '[0-9.]{1,12}'
+    expect:
+      type: int
+      minvalue: -1000 # insert desired values
+      maxvalue: 0
+
+  - name: Test BMS tempratures values # check for abnormal values
+    device: freya-rpi
+    command: |
+      source vortex_ws/install/setup.bash && 
+      ros2 topic echo --once /diagnostics | 
+        grep "temps" -A 1 | 
+        grep -Eo '[0-9.]{1,12}'
+    expect:
+      type: int
+      minvalue: 0 # insert desired values
+      maxvalue: 80
+
+  - name: Test thrusters # check thruster reaction to command
+    device: freya-rpi
+    command: 
+    expect:
+      type: manual
+      prompt: Did the thrusters make noise?
+      value: True
+
+  - name: Test joystick
+    device: freya-rpi
+    expect:
+      type: manual
+      prompt: 
+      value:
+
+  - name: Test thrusters with joystick
+    expect:
+      type: manual
+      prompt: Do the thrusters react to joystick movement?
+      value: True

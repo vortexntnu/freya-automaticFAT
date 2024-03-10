@@ -1,0 +1,66 @@
+name: Network
+priority: 100
+tasks:
+  - name: Test RPI connection
+    command: ping -c 4 10.0.1.99
+    expect: 
+      type: string
+      value: [
+        # "bytes=",
+        "time=",
+        "ttl="
+      ]
+
+#   - name: Validate RPI bashrc
+#     command: cat ~/.bashrc
+#     device: freya-rpi
+#     expect: 
+#       type: string
+#       value: [
+#         "rpi-ip=10.0.0.99",
+#         "xavier-ip=10.0.0.100",
+#         "laptop-ip=10.0.0.35",
+#         "export ROS_MASTER_URI=http://$rpi-ip:11311",
+#         "export ROS_IP=$rpi-ip",
+#         "export ROS_HOSTNAME=$rpi-ip"
+#       ]
+  
+  - name: Test Xavier connection
+    command: ping -c 4 10.0.1.100
+    expect: 
+      type: string
+      value: [
+        # "bytes=",
+        "time=",
+        "ttl="
+      ]
+  
+#   - name: Validate Xavier bashrc
+#     command: cat ~/.bashrc
+#     device: freya-xavier
+#     expect: 
+#       type: string
+#       value: [
+#         "rpi-ip=10.0.0.99",
+#         "xavier-ip=10.0.0.100",
+#         "laptop-ip=10.0.0.35",
+#         "export ROS_MASTER_URI=http://$rpi-ip:11311",
+#         "export ROS_IP=$xavier-ip",
+#         "export ROS_HOSTNAME=$xavier-ip"
+#       ]
+#   
+#   - name: Validate laptop bashrc
+#     command: cat ~/.bashrc
+#     expect: 
+#       type: string
+#       value: [
+#         "rpi-ip=10.0.0.99",
+#         "xavier-ip=10.0.0.100",
+#         "laptop-ip=10.0.0.35",
+#         "export ROS_MASTER_URI=http://$rpi-ip:11311",
+#         "export ROS_IP=$laptop-ip",
+#         "export ROS_HOSTNAME=$laptop-ip"
+#       ]
+
+# sjekk ubuquity
+      

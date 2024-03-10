@@ -6,3 +6,13 @@ tasks:
     expect:
       type: persistent
       value: True
+
+
+
+
+# Source install/setup.bash 
+# [rpi]: ros2 launch auv_setup Freya.lauch.py (new_auv.lauch.py / sjekk repo auv setup)
+# [laptop]: ros2 launch auv_setup pc (shoreside)
+
+
+# [laptop]: Floxglove, Vortex visuzalization (spør eirik / aleksander sitaw)
