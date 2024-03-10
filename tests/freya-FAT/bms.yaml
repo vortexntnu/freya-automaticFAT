@@ -32,7 +32,7 @@ tasks:
     expect:
       type: int
       minvalue: 20 # insert desired values
-      maxvalue: 28
+      maxvalue: 24.7
 
   - name: Test BMS current values # check for abnormal values
     device: freya-rpi

@@ -23,7 +23,7 @@ tasks:
 
   - name: Test thrusters # check thruster reaction to command
     device: freya-rpi
-    command: 
+    command: # command that would activate thrusters HERE
     expect:
       type: manual
       prompt: Did the thrusters make noise?
