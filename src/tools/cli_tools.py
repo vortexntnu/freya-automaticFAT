@@ -26,23 +26,31 @@ def run_str(command: str) -> str:
         return ""
 
 def run_persistent(command: str) -> bool:
+    process = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT)
+    
     try:
-        process = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT)
-
-        # await process start
+        # Wait for the process to finish
         while process.poll() is None:
-            time.sleep(1)
-
-        # clean up process at exit
+            pass
+        
+        # Clean up process at exit
         def cleanup() -> None:
             process.terminate()
             process.wait()
+
+        # Register cleanup function
         atexit.register(cleanup)
         
-        return True
+        # Check if the process exited successfully
+        if process.returncode == 0:
+            return True
+        else:
+            return False
     
     except Exception as e:
+        # Handle exceptions if any
         return False
+
 
 
 # add ssh wrapping to command

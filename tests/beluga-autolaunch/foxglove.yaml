@@ -7,7 +7,7 @@ tasks:
       ros2 launch auv_setup "NAME OF LAUNCH FILE"
     device: laptop
     expect:
-      type: percistant
+      type: persistent
       value: True 
   
   - name: Check ROS topic

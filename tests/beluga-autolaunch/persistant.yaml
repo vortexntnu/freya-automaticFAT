@@ -1,0 +1,9 @@
+name: Persistant
+priority: 999
+tasks:
+  - name: Test persistant command
+    device: laptop
+    command: ping 127.0.0.1
+    expect:
+      type: persistent
+      value: True 
