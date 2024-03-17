@@ -92,9 +92,9 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
 
     # If the task has a persistent expectation
     elif task["expect"]["type"] == "persistent":
-        result = run_persistent(task["command"])
+        result, perString = run_persistent(task["command"], task["expect"]["string"])
         
-        if result == task["expect"]["value"]:
+        if result == task["expect"]["value"] and task["expect"]["string"] in perString:
             console.log(f"{log_level['info']} Task successfully completed"); return True
         else:
             task_fail(fat, task["command"]); return False

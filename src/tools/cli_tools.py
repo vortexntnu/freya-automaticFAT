@@ -25,32 +25,27 @@ def run_str(command: str) -> str:
         # print("Command failed, check if needed package is installed.")
         return ""
 
-def run_persistent(command: str) -> bool:
-    process = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT)
-    
+def run_persistent(command: str, expectedString: str) -> tuple[bool, str]:
+    process = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
     try:
-        # Wait for the process to finish
         while process.poll() is None:
-            pass
+            output = process.stdout.read().decode()
+            process.stdout.seek(0)  # Reset file pointer position
+            if expectedString in output:
+                process.terminate()
+                process.wait()  # Wait for termination
+                return True, output
+            time.sleep(5)    
+        # If process finished without finding expected string
+        output = process.stdout.read().decode()
+        return False, output
         
-        # Clean up process at exit
-        def cleanup() -> None:
-            process.terminate()
-            process.wait()
-
-        # Register cleanup function
-        atexit.register(cleanup)
-        
-        # Check if the process exited successfully
-        if process.returncode == 0:
-            return True
-        else:
-            return False
-    
     except Exception as e:
-        # Handle exceptions if any
-        return False
-
+        return False, ""
+    finally:
+        # Clean up process at exit
+        process.terminate()
+        process.wait()
 
 
 # add ssh wrapping to command
