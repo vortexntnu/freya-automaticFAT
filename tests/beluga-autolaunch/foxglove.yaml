@@ -1,6 +1,6 @@
-name: foxglow
+name: Foxglove
 tasks:
-  - name: start foxglow interface
+  - name: Start Foxglove interface
     command: |
       cd vortex_ws/ &&
       source install/setup.bash &&
@@ -10,7 +10,7 @@ tasks:
       type: percistant
       value: True 
   
-  - name: Check ros topic
+  - name: Check ROS topic
     command: | 
       source vortex_ws/install/setup.bash &&
       ros2 topic list

@@ -25,7 +25,7 @@ def run_str(command: str) -> str:
         # print("Command failed, check if needed package is installed.")
         return ""
 
-def run_presistent(command: str) -> bool:
+def run_persistent(command: str) -> bool:
     try:
         process = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT)
 

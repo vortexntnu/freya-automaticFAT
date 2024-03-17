@@ -1,13 +1,13 @@
-name: shoreside
+name: Shoreside
 tasks:
-  - name: source and start ros2
+  - name: Source and start ROS2
     command: |
       cd vortex_ws &&
       source install/setup.bash &&
       ros2 launch auv_setup topside.launch
     device: laptop
     expect:
-      type: percistant
+      type: persistent
       value: True
   
   - name: Check topic list

@@ -1,12 +1,12 @@
 from src.tools.rich_print import log_level, fat_status
-from src.tools.cli_tools import run_bool, run_str, run_presistent
+from src.tools.cli_tools import run_bool, run_str, run_persistent
 
 from rich.console import Console
 
 
 def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
     """
-    Executes a task within a FAT, extracting data from a YAML file.
+    Execute a task within a FAT, extracting data from a YAML file.
 
     Args:
         fat: The FAT this task is part of.
@@ -19,7 +19,6 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
     Raises:
         KeyError: If any of the required keys ("expect", "type", "value", etc.) are missing from the task dictionary or its nested dictionaries.
     """
-    
     # Function to handle task failure
     def task_fail(fat: dict | list, command: str):
         fat["status"] = fat_status["failed"]
@@ -55,7 +54,6 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
             console.log(f"{log_level['info']} Task successfully completed"); return True
         else:
             task_fail(fat, task["command"]); return False
-
 
     # If the expected result of the task is of type array
     elif task["expect"]["type"] == "array":
@@ -94,7 +92,7 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
 
     # If the task has a persistent expectation
     elif task["expect"]["type"] == "persistent":
-        result = run_presistent(task["command"])
+        result = run_persistent(task["command"])
         
         if result == task["expect"]["value"]:
             console.log(f"{log_level['info']} Task successfully completed"); return True
