@@ -28,14 +28,16 @@ def run_str(command: str) -> str:
 def run_persistent(command: str, expectedString: str) -> tuple[bool, str]:
     process = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
     try:
-        while process.poll() is None:
-            output = process.stdout.read().decode()
-            process.stdout.seek(0)  # Reset file pointer position
+        while True:
+            output = process.stdout.readline().decode()
+            if output == '' and process.poll() is not None:
+                break  # Reached end of output and process has terminated
             if expectedString in output:
                 process.terminate()
                 process.wait()  # Wait for termination
                 return True, output
-            time.sleep(5)    
+            time.sleep(5)
+        
         # If process finished without finding expected string
         output = process.stdout.read().decode()
         return False, output

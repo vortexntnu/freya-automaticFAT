@@ -3,9 +3,8 @@ priority: 999
 tasks:
   - name: Test persistant command
     device: laptop
-    command: ping 127.0.0.1
+    command: ping -t 8.8.8.8
     expect:
       type: persistent
       string: "Reply"
       value: True 
-    error: "Something went wrong, custom error message here"
