@@ -33,6 +33,7 @@ tasks:
       type: int
       minvalue: 20 # insert desired values
       maxvalue: 24.7
+    error: "Voltage outside desired range"
 
   - name: Test BMS current values # check for abnormal values
     device: freya-rpi

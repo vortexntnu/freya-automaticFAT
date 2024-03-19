@@ -15,13 +15,12 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
 
     Returns:
         bool: True if the task succeeds, False otherwise.
-
-    Raises:
-        KeyError: If any of the required keys ("expect", "type", "value", etc.) are missing from the task dictionary or its nested dictionaries.
     """
     # Function to handle task failure
     def task_fail(fat: dict | list, command: str):
         fat["status"] = fat_status["failed"]
+        if "error" in task and task["error"] is not None:
+            console.log(f"{log_level['error']} [red]{task["error"]}[/red]")
         console.log(f"{log_level['error']} [red]Failed at running command:[/red] {command}")
 
     # If the expected result of the task is of type boolean
@@ -50,7 +49,8 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
 
         if "value" in task["expect"] and result == task["expect"]["value"]:
             console.log(f"{log_level['info']} Task successfully completed"); return True
-        elif result in range(task["expect"]["minvalue"], task["expect"]["maxvalue"]): # If the expected result is within a range of int values
+        # If the expected result is within a range of int values
+        elif result in range(task["expect"]["minvalue"], task["expect"]["maxvalue"]): 
             console.log(f"{log_level['info']} Task successfully completed"); return True
         else:
             task_fail(fat, task["command"]); return False
@@ -96,5 +96,8 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
         
         if result == task["expect"]["value"] and task["expect"]["string"] in perString:
             console.log(f"{log_level['info']} Task successfully completed"); return True
+        elif task["expect"]["string"] not in perString:
+            console.log(f"{log_level['warning']} [bright_yellow]Could not find expected string:[/bright_yellow] {task["expect"]["string"]}")
+            task_fail(fat, task["command"]); return False
         else:
             task_fail(fat, task["command"]); return False
