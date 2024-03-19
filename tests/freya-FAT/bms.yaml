@@ -20,6 +20,7 @@ tasks:
       ros2 launch bms bms_launch.py
     expect:
       type: persistent
+      string: "Found device"
       value: True
 
   - name: Test BMS voltage values # check for abnormal values

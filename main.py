@@ -13,29 +13,29 @@ from rich.table import Table
 
 
 def main() -> None:
-
+    
     # ------------------------------------------------------
     # init
     # ------------------------------------------------------
 
-    # create console
+    # Create console
     console = Console()
 
     console.rule(f"Automatic FAT, {datetime.now()}")
     
-    # read and validate config
+    # Read and validate config
     config = read_yaml("config.yaml")
     if config_yamVal(config, console):
         console.log(f"{log_level['info']} Applying config file")
     else:
         console.log(f"{log_level['error']} Config did not pass validation"); return
     
-    # use config to identify devices
+    # Use config to identify devices
     devices = {}
     for device in config["autofat"]["network"]:
         devices[device["name"]] = {"ip": device["ip"], "user": device["credentials"]["user"], "pwd": device["credentials"]["pwd"]}
     
-    # search for avaliable yaml files in /FATs, they are assumed to be FATs
+    # Search for avaliable yaml files in /FATs, they are assumed to be FATs
     console.log(f"{log_level['info']} Searching for FATs")
     status = get_fat(devices, console)
     
@@ -45,24 +45,24 @@ def main() -> None:
     # Loop and do FATs
     # ------------------------------------------------------
 
-    # loop through all fats registered
+    # Loop through all FATs registered
     for fat in status:
         console.log(f"\n{log_level['info']} Beginning FAT: {fat['name']}")
         fat["status"] = fat_status["running"]
 
-        # loop through all tasks in a fat
+        # Loop through all tasks in a FAT
         for task in fat["content"]["tasks"]:
             console.log(f"{log_level['info']} Doing task: {task['name']}")
 
-            # if the task should be ran on a different device
+            # If the task should be ran on a different device
             if "device" in task and task["device"] != "laptop":
                 task["command"] = ssh_wrap(task["command"], devices[task["device"]])
 
-            # do task, if fail break for-loop
+            # Do task, if fail break for-loop
             if not run_task(fat, task, console):
                 break
                 
-        # check fat status 
+        # Check FAT status 
         if fat["status"] == fat_status["running"]:
             fat["status"] = fat_status["success"]
             console.log(f"{log_level['info']} FAT: {fat['name']}, [green]successful[/green]")  
@@ -79,7 +79,7 @@ def main() -> None:
     if status:
         console.rule("Summary")
 
-        # create table of all FATs and their "end" statuses
+        # Create table of all FATs and their "end" statuses
         table = Table(box=box.MINIMAL)
 
         table.add_column("File", justify="left")

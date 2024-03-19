@@ -19,6 +19,7 @@ def run_task(fat: dict | list, task: dict | list, console: Console) -> bool:
     # Function to handle task failure
     def task_fail(fat: dict | list, command: str):
         fat["status"] = fat_status["failed"]
+        # Allow custom error messages (for niche cases)
         if "error" in task and task["error"] is not None:
             console.log(f"{log_level['error']} [red]{task["error"]}[/red]")
         console.log(f"{log_level['error']} [red]Failed at running command:[/red] {command}")
