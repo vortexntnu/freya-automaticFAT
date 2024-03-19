@@ -26,15 +26,13 @@ def run_str(command: str) -> str:
         return ""
 
 def run_persistent(command: str, expectedString: str) -> tuple[bool, str]:
-    process = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+    process = subprocess.Popen(command, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, creationflags=subprocess.CREATE_NEW_CONSOLE)
     try:
         while True:
             output = process.stdout.readline().decode()
             if output == '' and process.poll() is not None:
                 break  # Reached end of output and process has terminated
             if expectedString in output:
-                process.terminate()
-                process.wait()  # Wait for termination
                 return True, output
             time.sleep(5)
         
